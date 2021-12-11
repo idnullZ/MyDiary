@@ -48,13 +48,10 @@ fun DiaryToolBar(
 
             Row(
                 modifier = Modifier
-                    //.background(Color(0xff1f2428))
                     .height(56.dp),
                 horizontalArrangement = Arrangement.Start,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-
-
                 Box(
                     modifier = Modifier
                         .padding(12.dp)
@@ -85,7 +82,7 @@ fun DiaryToolBar(
                     },
                     isHintVisible = searchBarState.isHintVisible,
                     textStyle = TextStyle(
-                        color = Color.White,
+                        color = MaterialTheme.colors.onBackground,
                         fontWeight = FontWeight.Normal,
                         fontSize = 20.sp,
                         letterSpacing = 0.5.sp
@@ -150,7 +147,7 @@ fun DiaryToolBar(
                                 menuExpanded = false
                             }
                         ) {
-                            Text(text = "Auto")
+                            Text(text = "Auto",color = MaterialTheme.colors.onBackground)
                         }
                         DropdownMenuItem(
                             onClick = {
@@ -158,7 +155,7 @@ fun DiaryToolBar(
                                 menuExpanded = false
                             }
                         ) {
-                            Text(text = "Light Theme")
+                            Text(text = "Light Theme" ,color = MaterialTheme.colors.onBackground)
                         }
                         DropdownMenuItem(
                             onClick = {
@@ -166,7 +163,7 @@ fun DiaryToolBar(
                                 menuExpanded = false
                             }
                         ) {
-                            Text(text = "Dark Theme")
+                            Text(text = "Dark Theme",color = MaterialTheme.colors.onBackground)
                         }
                     }
                 }

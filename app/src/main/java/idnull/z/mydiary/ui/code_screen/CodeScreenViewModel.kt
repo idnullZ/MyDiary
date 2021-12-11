@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import idnull.z.mydiary.data.DataStoreRepository
+import idnull.z.mydiary.utils.loger
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
@@ -32,9 +33,9 @@ class CodeScreenViewModel @Inject constructor(
     val numbers = _numbers
 
     private var nawCode = ""
-    init {
-        init()
-    }
+//    init {
+//        init()
+//    }
 
     fun setOneNumber(number: String) {
         nawCode += number
@@ -65,7 +66,9 @@ class CodeScreenViewModel @Inject constructor(
     }
 
 
-    private fun init() {
+     fun init() {
+
+
         viewModelScope.launch {
             _isFirsOpen = repository.readFirstOpen()
             setIsFiresOpen()

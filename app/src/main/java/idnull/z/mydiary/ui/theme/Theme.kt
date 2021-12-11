@@ -19,7 +19,7 @@ private val DarkColorPalette = darkColors(
 )
 
 private val LightColorPalette = lightColors(
-    primary = myWhite,
+    primary = dayToolbarBackground,
     primaryVariant = Purple700,
     secondary = Teal200,
     background = Color.White,

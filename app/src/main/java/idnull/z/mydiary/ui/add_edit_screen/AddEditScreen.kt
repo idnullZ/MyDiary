@@ -44,7 +44,7 @@ fun AddEditScreen(
                 Column(
                     modifier = Modifier
                         .fillMaxSize()
-                        .background(MaterialTheme.colors.background)
+                        .background(MaterialTheme.colors.surface)
                         .padding(16.dp)
 
                 ) {

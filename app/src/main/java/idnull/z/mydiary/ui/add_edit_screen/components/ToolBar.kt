@@ -4,6 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Icon
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Delete
@@ -26,14 +27,14 @@ fun ToolBar(navController: NavController, viewModel: AddEditScreenViewModel) {
         modifier = Modifier
             .height(60.dp)
             .fillMaxWidth()
-            .background(color = Color(0xff1f2428))
+            .background(color = MaterialTheme.colors.primary)
     ) {
         Icon(imageVector = Icons.Default.ArrowBack, contentDescription = "ArrowBack",
 
             modifier = Modifier
                 .clickable { navController.navigateUp() }
                 .padding(horizontal = 8.dp),
-            tint = Color.White
+            tint =  MaterialTheme.colors.onBackground
 
         )
         Row(
@@ -42,7 +43,6 @@ fun ToolBar(navController: NavController, viewModel: AddEditScreenViewModel) {
             modifier = Modifier
                 .height(44.dp)
                 .fillMaxWidth()
-                .background(color = Color(0xff1f2428))
         ) {
             Icon(imageVector = Icons.Default.Save, contentDescription = "save button",
                 modifier = Modifier
@@ -50,7 +50,7 @@ fun ToolBar(navController: NavController, viewModel: AddEditScreenViewModel) {
                         viewModel.obtainEvent(AddEditScreenEvent.SaveDiary)
                     }
                     .padding(horizontal = 8.dp),
-                tint = Color.White)
+                tint = MaterialTheme.colors.onBackground)
 
 
 
@@ -60,7 +60,7 @@ fun ToolBar(navController: NavController, viewModel: AddEditScreenViewModel) {
                         viewModel.obtainEvent(AddEditScreenEvent.DeleteDiary)
                     }
                     .padding(horizontal = 8.dp),
-                tint = Color.White)
+                tint = MaterialTheme.colors.onBackground)
         }
     }
 }

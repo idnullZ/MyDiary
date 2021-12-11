@@ -14,9 +14,9 @@ import androidx.compose.material.Scaffold
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import idnull.z.mydiary.domain.themes.AppTheme
@@ -40,7 +40,7 @@ fun DiaryListScreen(
                 onClick = {
                     navController.navigate(Screen.AddEditDiaryScreen.route)
                 }
-               // , backgroundColor = MaterialTheme.colors.background,
+
             ) {
                 Icon(imageVector = Icons.Default.Add, contentDescription = "Add")
             }
@@ -50,7 +50,7 @@ fun DiaryListScreen(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .background(MaterialTheme.colors.background)
+                .background(MaterialTheme.colors.surface)
         ) {
 
             DiaryToolBar(
@@ -76,6 +76,8 @@ fun DiaryListScreen(
             }
         }
     }
+
+
 }
 
 
