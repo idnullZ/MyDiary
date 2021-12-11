@@ -9,6 +9,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.FloatingActionButton
 import androidx.compose.material.Icon
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
@@ -30,20 +31,16 @@ import kotlinx.coroutines.FlowPreview
 @Composable
 fun DiaryListScreen(
     navController: NavController,
-    viewModel: DiaryListViewModel = hiltViewModel()
-    ,
+    viewModel: DiaryListViewModel = hiltViewModel(),
     onItemSelected: (AppTheme) -> Unit
 ) {
-
-
-
     Scaffold(
         floatingActionButton = {
             FloatingActionButton(
                 onClick = {
-                    navController.navigate("addEditScreen")
-                },
-                backgroundColor = Color(0xff639dff),
+                    navController.navigate(Screen.AddEditDiaryScreen.route)
+                }
+               // , backgroundColor = MaterialTheme.colors.background,
             ) {
                 Icon(imageVector = Icons.Default.Add, contentDescription = "Add")
             }
@@ -53,7 +50,7 @@ fun DiaryListScreen(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .background(Color(0xff181c20))
+                .background(MaterialTheme.colors.background)
         ) {
 
             DiaryToolBar(
@@ -79,9 +76,6 @@ fun DiaryListScreen(
             }
         }
     }
-
-
-
 }
 
 

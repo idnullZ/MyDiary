@@ -4,6 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -22,7 +23,7 @@ fun Point(pointNumber: Int, viewModel: CodeScreenViewModel) {
                 if (pointNumber < viewModel.countItemPassword.value) {
                     Color.Red
                 } else {
-                    Color.White
+                    MaterialTheme.colors.onBackground
 
                 }
             )

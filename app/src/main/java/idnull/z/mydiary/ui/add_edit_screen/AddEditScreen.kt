@@ -2,6 +2,7 @@ package idnull.z.mydiary.ui.add_edit_screen
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
@@ -31,8 +32,6 @@ fun AddEditScreen(
     Scaffold(
         scaffoldState = scaffoldState
     ) {
-
-
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -45,7 +44,7 @@ fun AddEditScreen(
                 Column(
                     modifier = Modifier
                         .fillMaxSize()
-                        .background(Color(0xff2d3c43))
+                        .background(MaterialTheme.colors.background)
                         .padding(16.dp)
 
                 ) {
@@ -63,7 +62,7 @@ fun AddEditScreen(
                         },
                         isHintVisible = titleState.isHintVisible,
                         textStyle = TextStyle(
-                            color = Color.White,
+                            color = MaterialTheme.colors.onBackground,
                             fontWeight = FontWeight.Normal,
                             fontSize = 28.sp,
                             letterSpacing = 0.sp
@@ -90,7 +89,7 @@ fun AddEditScreen(
 
                         textStyle = TextStyle(
 
-                            color = Color.White,
+                            color = MaterialTheme.colors.onBackground,
                             fontWeight = FontWeight.Normal,
                             fontSize = 20.sp,
                             letterSpacing = 0.5.sp

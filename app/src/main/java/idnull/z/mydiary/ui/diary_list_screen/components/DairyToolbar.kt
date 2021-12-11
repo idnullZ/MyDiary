@@ -3,10 +3,7 @@ package idnull.z.mydiary.ui.diary_list_screen.components
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.DropdownMenu
-import androidx.compose.material.DropdownMenuItem
-import androidx.compose.material.Icon
-import androidx.compose.material.Text
+import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.MoreVert
@@ -40,7 +37,7 @@ fun DiaryToolBar(
     var menuExpanded by remember { mutableStateOf(false) }
     Row(
         modifier = Modifier
-            .background(Color(0xff1f2428))
+            .background(MaterialTheme.colors.primary)
             .fillMaxWidth()
             .height(56.dp),
         horizontalArrangement = Arrangement.SpaceBetween,
@@ -51,7 +48,7 @@ fun DiaryToolBar(
 
             Row(
                 modifier = Modifier
-                    .background(Color(0xff1f2428))
+                    //.background(Color(0xff1f2428))
                     .height(56.dp),
                 horizontalArrangement = Arrangement.Start,
                 verticalAlignment = Alignment.CenterVertically
@@ -72,7 +69,7 @@ fun DiaryToolBar(
                                 viewModel.testFun()
 
                             },
-                        tint = Color.White
+                        tint = MaterialTheme.colors.onBackground
                     )
                 }
                 ControlTextField(
@@ -103,7 +100,7 @@ fun DiaryToolBar(
             Text(
                 text = "My Diary",
                 fontSize = 24.sp,
-                color = Color.White,
+                color = MaterialTheme.colors.onBackground,
                 modifier = Modifier.padding(start = 16.dp)
 
             )
@@ -120,7 +117,7 @@ fun DiaryToolBar(
                             searchBarVisibility = true
                         }
                         .padding(horizontal = 8.dp),
-                    tint = Color.White
+                    tint = MaterialTheme.colors.onBackground
 
                 )
 
@@ -131,7 +128,7 @@ fun DiaryToolBar(
                             menuExpanded = true
                         }
                         .padding(horizontal = 8.dp),
-                    tint = Color.White
+                    tint = MaterialTheme.colors.onBackground
                 )
 
                 Column(

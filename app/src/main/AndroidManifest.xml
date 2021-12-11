@@ -11,6 +11,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MyDiary">
         <activity
+            android:screenOrientation="portrait"
             android:name=".ui.MainActivity"
             android:windowSoftInputMode="adjustResize"
             android:exported="true"

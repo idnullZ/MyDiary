@@ -6,6 +6,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.*
@@ -33,7 +34,7 @@ fun CodeScreen(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .background(color = Color.Black),
+                .background(color = MaterialTheme.colors.surface),
             verticalArrangement = Arrangement.SpaceBetween
         ) {
             Points(viewModel = viewModel)
@@ -49,7 +50,6 @@ fun CodeScreen(
             }
         }
 
-        // navController.navigate("diaryListScreen")
     }
     ShowAlertDialog(
         textMain = "please set new code",
