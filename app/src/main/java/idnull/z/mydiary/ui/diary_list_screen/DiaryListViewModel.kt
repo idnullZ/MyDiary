@@ -87,14 +87,18 @@ class DiaryListViewModel @Inject constructor(
 
     private fun search(query: String) {
 
+        loger("sersh  = $query")
+
         val searchList = if (isSearchStarted) {
+
+
             listDiary.value
         } else {
             cacheList
         }
 
         viewModelScope.launch(Dispatchers.Default) {
-            if (query.isEmpty() || query == "") {
+            if (query.isEmpty() || query == EMPTY) {
                 listDiary.value = cacheList
                 isSearch = false
                 isSearchStarted = true
@@ -118,8 +122,15 @@ class DiaryListViewModel @Inject constructor(
 
     fun testFun() {
         _searchBar.value = searchBar.value.copy(
-            text = ""
+            text = EMPTY
         )
+
+        search(EMPTY)
+
+    }
+
+    companion object{
+        private const val EMPTY = ""
     }
 
 
