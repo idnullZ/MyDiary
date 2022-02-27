@@ -11,11 +11,9 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-abstract class SettingModule {
+interface SettingModule {
 
     @Binds
     @Singleton
-    abstract fun bindThemeSetting(
-        themeSettingPreference: ThemeSettingPreference
-    ): ThemeSetting
+     fun bindThemeSetting(themeSettingPreference: ThemeSettingPreference): ThemeSetting
 }
