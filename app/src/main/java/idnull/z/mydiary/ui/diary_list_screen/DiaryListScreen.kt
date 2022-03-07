@@ -7,23 +7,25 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.FloatingActionButton
-import androidx.compose.material.Icon
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Scaffold
+import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import idnull.z.mydiary.domain.themes.AppTheme
 import idnull.z.mydiary.ui.diary_list_screen.components.DiaryListItem
 import idnull.z.mydiary.ui.diary_list_screen.components.DiaryToolBar
+import idnull.z.mydiary.ui.shared_component.BottomBar
+import idnull.z.mydiary.ui.shared_component.FabButton
+import idnull.z.mydiary.ui.theme.PerfectDark
 import idnull.z.mydiary.utils.Screen
 import kotlinx.coroutines.FlowPreview
+
 
 @FlowPreview
 @ExperimentalComposeUiApi
@@ -35,16 +37,11 @@ fun DiaryListScreen(
     onItemSelected: (AppTheme) -> Unit
 ) {
     Scaffold(
-        floatingActionButton = {
-            FloatingActionButton(
-                onClick = {
-                    navController.navigate(Screen.AddEditDiaryScreen.route)
-                }
-
-            ) {
-                Icon(imageVector = Icons.Default.Add, contentDescription = "Add")
-            }
-        },
+        bottomBar = { BottomBar(navController = navController) },
+        floatingActionButton = { FabButton(navController) },
+        backgroundColor = PerfectDark,
+        isFloatingActionButtonDocked = true,
+        floatingActionButtonPosition = FabPosition.Center,
 
         ) {
         Column(
@@ -54,8 +51,7 @@ fun DiaryListScreen(
         ) {
 
             DiaryToolBar(
-                viewModel = viewModel
-                ,
+                viewModel = viewModel,
                 onItemSelected = onItemSelected
 
             )

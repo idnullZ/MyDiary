@@ -4,14 +4,11 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.room.Room
 import dagger.hilt.android.lifecycle.HiltViewModel
 import idnull.z.mydiary.data.DiaryRepository
 import idnull.z.mydiary.domain.Diary
-import idnull.z.mydiary.domain.DiaryUnit
 import idnull.z.mydiary.domain.use_case.GetListDiaryUseCase
 import idnull.z.mydiary.ui.add_edit_screen.TextFieldState
-import idnull.z.mydiary.utils.loger
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.collect
@@ -86,8 +83,6 @@ class DiaryListViewModel @Inject constructor(
     }
 
     private fun search(query: String) {
-
-        loger("sersh  = $query")
 
         val searchList = if (isSearchStarted) {
 

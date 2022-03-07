@@ -26,7 +26,7 @@ fun DiaryListItem(diary: Diary, modifier: Modifier = Modifier) {
             .padding(horizontal = 12.dp, vertical = 6.dp),
         shape = RoundedCornerShape(6.dp),
         elevation = 6.dp,
-        backgroundColor = MaterialTheme.colors.background,
+        backgroundColor = MaterialTheme.colors.primary,
 
         ) {
         Column(

@@ -8,12 +8,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 
 private val DarkColorPalette = darkColors(
-    primary = darkToolbarBackground,
+    primary = DarkBar,
     primaryVariant = Purple700,
     secondary = Teal200,
     background = myBackground,
     onBackground = Color.White,
-    surface = Color.Black
+    surface = PerfectDark,
+    secondaryVariant = DarkBar
 
 
 )
@@ -24,7 +25,8 @@ private val LightColorPalette = lightColors(
     secondary = Teal200,
     background = Color.White,
     onBackground = Color.Black,
-    surface = myWhite
+    surface = myWhite,
+    secondaryVariant = DarkBar
 
 
     /* Other default colors to override

@@ -1,4 +1,4 @@
-package idnull.z.mydiary.ui.animate
+package idnull.z.mydiary.ui.shared_component.animate
 
 import androidx.compose.animation.*
 import androidx.compose.animation.core.tween
