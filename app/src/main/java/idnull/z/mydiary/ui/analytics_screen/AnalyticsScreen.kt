@@ -3,6 +3,8 @@ package idnull.z.mydiary.ui.analytics_screen
 import androidx.compose.material.FabPosition
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Analytics
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.sp
@@ -17,7 +19,7 @@ fun AnalyticsScreen(navController:NavController) {
 
     Scaffold(
         backgroundColor = PerfectDark,
-        topBar = { TopBar("Analytics", navController) },
+        topBar = { TopBar("Analytics",Icons.Outlined.Analytics) },
         floatingActionButton = { FabButton(navController = navController) },
         isFloatingActionButtonDocked = true,
         floatingActionButtonPosition = FabPosition.Center,
