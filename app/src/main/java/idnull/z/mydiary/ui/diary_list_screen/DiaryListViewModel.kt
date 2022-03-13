@@ -18,14 +18,11 @@ import javax.inject.Inject
 @HiltViewModel
 class DiaryListViewModel @Inject constructor(
     private val repository: DiaryRepository,
-   private val getListDiaryUseCase: GetListDiaryUseCase
-) :
-    ViewModel() {
-
+    private val getListDiaryUseCase: GetListDiaryUseCase
+) : ViewModel() {
 
     var listDiary = mutableStateOf<List<Diary>>(listOf())
-    private set
-
+        private set
     private var cacheList = listOf<Diary>()
 
     private var isSearchStarted = true
@@ -70,15 +67,9 @@ class DiaryListViewModel @Inject constructor(
 
     private fun getDiary() {
         viewModelScope.launch {
-
-            getListDiaryUseCase.invoke().collect{
-
-
+            getListDiaryUseCase.invoke().collect {
                 listDiary.value = it
-
             }
-
-
         }
     }
 
@@ -124,7 +115,7 @@ class DiaryListViewModel @Inject constructor(
 
     }
 
-    companion object{
+    companion object {
         private const val EMPTY = ""
     }
 

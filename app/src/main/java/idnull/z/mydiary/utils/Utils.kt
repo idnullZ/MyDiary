@@ -16,7 +16,6 @@ fun toDiary(diaryUnit: DiaryUnit): Diary {
         content = diaryUnit.content,
         date = convertData(diaryUnit.date)
     )
-
 }
 
 fun convertData(date: Long): String {

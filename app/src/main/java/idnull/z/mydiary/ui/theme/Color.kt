@@ -12,6 +12,8 @@ val PerfectDark = Color( 0xFF1b252f)
 val DarkBar = Color( 0xFF1b2b37)
 val ColorFAB = Color( 0xFF5a9ecf)
 val RoyalBlue = Color(0xED7762FF)
+val CalendarBlue = Color(0xee00c7ff)
+val Yellow = Color(0xeeffbf08)
 
 val darkToolbarBackground = Color(0xff1f2428)
 val dayToolbarBackground = Color(0xFFFFFFFF)

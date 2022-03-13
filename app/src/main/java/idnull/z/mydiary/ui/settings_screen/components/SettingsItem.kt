@@ -34,7 +34,7 @@ fun SettingsItem(imageVector: ImageVector, text: String) {
                 imageVector = imageVector, contentDescription = text,
                 tint = Color.White, modifier = Modifier
                     .padding(start = 20.dp, top = 12.dp, bottom = 12.dp)
-                    .size(32.dp)
+                    .size(24.dp)
             )
             Text(
                 text = text,

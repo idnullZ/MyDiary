@@ -11,10 +11,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 
+
 @Composable
 fun ShowAlertDialog(textMain: String, textTitle: String, showState: Boolean, onClick: () -> Unit) {
-
-
     if (showState) {
         AlertDialog(
             onDismissRequest = {

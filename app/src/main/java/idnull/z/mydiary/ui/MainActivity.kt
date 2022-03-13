@@ -14,6 +14,7 @@ import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.core.content.ContextCompat
 import androidx.navigation.NavType
 import androidx.navigation.navArgument
+import com.google.accompanist.insets.ProvideWindowInsets
 import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.composable
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
@@ -49,79 +50,84 @@ class MainActivity : ComponentActivity() {
     @ExperimentalFoundationApi
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         setContent {
-            val theme = themeSetting.themeStream.collectAsState()
-            when (theme.value) {
-                AppTheme.MODE_AUTO -> isSystemInDarkTheme()
-                AppTheme.MODE_DAY -> {
-                    window.statusBarColor = ContextCompat.getColor(this, R.color.white)
+            ProvideWindowInsets {
+                val theme = themeSetting.themeStream.collectAsState()
+                when (theme.value) {
+                    AppTheme.MODE_AUTO -> isSystemInDarkTheme()
+                    AppTheme.MODE_DAY -> {
+                        window.statusBarColor =
+                            ContextCompat.getColor(this, idnull.z.mydiary.R.color.white)
+                    }
+                    AppTheme.MODE_NIGHT -> {
+                        window.statusBarColor =
+                            ContextCompat.getColor(this, idnull.z.mydiary.R.color.black)
+                    }
                 }
-                AppTheme.MODE_NIGHT -> {
-                    window.statusBarColor = ContextCompat.getColor(this, R.color.black)
+
+                val useDarkColors = when (theme.value) {
+                    AppTheme.MODE_AUTO -> isSystemInDarkTheme()
+                    AppTheme.MODE_DAY -> false
+                    AppTheme.MODE_NIGHT -> true
                 }
-            }
 
-            val useDarkColors = when (theme.value) {
-                AppTheme.MODE_AUTO -> isSystemInDarkTheme()
-                AppTheme.MODE_DAY -> false
-                AppTheme.MODE_NIGHT -> true
-            }
+                MyDiaryTheme(darkTheme = useDarkColors) {
+                    Surface(color = MaterialTheme.colors.background)
+                    {
+                        val navController = rememberAnimatedNavController()
+                        AnimatedNavHost(
+                            navController = navController,
+                            startDestination = Screen.CodeScreen.route
+                        ) {
+                            composable(
+                                Screen.CodeScreen.route,
+                                enterTransition = enterAnimatedTransition(Screen.DairyListScreen),
+                                exitTransition = exitAnimatedTransition(Screen.DairyListScreen)
+                            ) {
+                                CodeScreen(navController = navController)
+                            }
+                            composable(
+                                Screen.DairyListScreen.route,
+                                enterTransition = enterAnimatedTransition(Screen.AddEditDiaryScreen),
+                                exitTransition = exitAnimatedTransition(Screen.AddEditDiaryScreen),
+                                popEnterTransition = popEnterAnimatedTransition(Screen.AddEditDiaryScreen),
+                                popExitTransition = popExitAnimatedTransition(Screen.AddEditDiaryScreen)
+                            ) {
+                                DiaryListScreen(navController = navController,
+                                    onItemSelected = { theme -> themeSetting.theme = theme })
+                            }
+                            composable(
+                                route = Screen.AddEditDiaryScreen.route + "?id={id}",
+                                arguments = listOf(
+                                    navArgument(name = "id") {
+                                        type = NavType.IntType
+                                        defaultValue = -1
+                                    }
+                                ),
+                                enterTransition = enterAnimatedTransition(Screen.DairyListScreen),
+                                exitTransition = exitAnimatedTransition(Screen.DairyListScreen),
+                                popEnterTransition = popEnterAnimatedTransition(Screen.DairyListScreen),
+                                popExitTransition = popExitAnimatedTransition(Screen.DairyListScreen)
+                            ) {
+                                AddEditScreen(navController = navController)
+                            }
 
-            MyDiaryTheme(darkTheme = useDarkColors) {
-                Surface(color = MaterialTheme.colors.background)
-                {
-                    val navController = rememberAnimatedNavController()
-                    AnimatedNavHost(
-                        navController = navController,
-                        startDestination = Screen.CodeScreen.route
-                    ) {
-                        composable(
-                            Screen.CodeScreen.route,
-                            enterTransition = enterAnimatedTransition(Screen.DairyListScreen),
-                            exitTransition = exitAnimatedTransition(Screen.DairyListScreen)
-                        ) {
-                            CodeScreen(navController = navController)
-                        }
-                        composable(
-                            Screen.DairyListScreen.route,
-                            enterTransition = enterAnimatedTransition(Screen.AddEditDiaryScreen),
-                            exitTransition = exitAnimatedTransition(Screen.AddEditDiaryScreen),
-                            popEnterTransition = popEnterAnimatedTransition(Screen.AddEditDiaryScreen),
-                            popExitTransition = popExitAnimatedTransition(Screen.AddEditDiaryScreen)
-                        ) {
-                            DiaryListScreen(navController = navController,
-                                onItemSelected = { theme -> themeSetting.theme = theme })
-                        }
-                        composable(
-                            route = Screen.AddEditDiaryScreen.route + "?id={id}",
-                            arguments = listOf(
-                                navArgument(name = "id") {
-                                    type = NavType.IntType
-                                    defaultValue = -1
-                                }
-                            ),
-                            enterTransition = enterAnimatedTransition(Screen.DairyListScreen),
-                            exitTransition = exitAnimatedTransition(Screen.DairyListScreen),
-                            popEnterTransition = popEnterAnimatedTransition(Screen.DairyListScreen),
-                            popExitTransition = popExitAnimatedTransition(Screen.DairyListScreen)
-                        ) {
-                            AddEditScreen(navController = navController)
-                        }
-
-                        composable(
-                            route = Screen.SettingsScreen.route
-                        ) {
-                            SettingsScreen(navController)
-                        }
-                        composable(
-                            route = Screen.CalendarScreen.route
-                        ) {
-                            CalendarScreen(navController)
-                        }
-                        composable(
-                            route = Screen.AnalyticsScreen.route
-                        ) {
-                            AnalyticsScreen(navController)
+                            composable(
+                                route = Screen.SettingsScreen.route
+                            ) {
+                                SettingsScreen(navController)
+                            }
+                            composable(
+                                route = Screen.CalendarScreen.route
+                            ) {
+                                CalendarScreen(navController)
+                            }
+                            composable(
+                                route = Screen.AnalyticsScreen.route
+                            ) {
+                                AnalyticsScreen(navController)
+                            }
                         }
                     }
                 }
