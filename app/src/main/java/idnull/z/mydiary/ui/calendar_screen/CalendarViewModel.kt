@@ -6,10 +6,14 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import idnull.z.mydiary.domain.Diary
 import idnull.z.mydiary.domain.use_case.GetListDiaryFromCalendarUseCase
-import idnull.z.mydiary.utils.loger
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
+import java.util.*
 import javax.inject.Inject
+import kotlin.collections.ArrayList
 
 
 @HiltViewModel
@@ -17,35 +21,38 @@ class CalendarViewModel @Inject constructor(
     private val getListDiaryFromCalendarUseCase: GetListDiaryFromCalendarUseCase
 ) : ViewModel() {
 
+    private var nawData = ""
+
+
     var diary = mutableStateOf("")
         private set
 
+    val date = mutableStateOf("")
+
     private var listDiary = ArrayList<Diary>(listOf())
-    //date=2022.03.08
 
     fun getDiaryUnit(year: Int, month: Int, day: Int) {
         val tryMonth = month + 1
         var dayNaw = ""
-        if (day < 9) {
-            dayNaw = "0$day"
+        dayNaw = if (day < 9) {
+            "0$day"
         } else {
-          dayNaw =   day.toString()
+            day.toString()
         }
         var format = ""
-        if (tryMonth < 9) {
-            format = "$year.0$tryMonth.$dayNaw"
+        format = if (tryMonth < 9) {
+            "$year.0$tryMonth.$dayNaw"
         } else {
-            format = "$year.$tryMonth.$dayNaw"
+            "$year.$tryMonth.$dayNaw"
         }
 
         searchDiaryUnit(format)
     }
 
     private fun searchDiaryUnit(data: String) {
-        loger(data)
+        diary.value = ""
         listDiary.forEach {
             if (it.date == data) {
-                loger(it.toString())
                 diary.value = it.content
 
             }
@@ -55,6 +62,19 @@ class CalendarViewModel @Inject constructor(
 
     init {
         getDiary()
+        tupoFun()
+    }
+
+    private fun tupoFun() {
+        viewModelScope.launch(Dispatchers.Default) {
+            while (true){
+                delay(1000)
+                searchDiaryUnit(nawData)
+                if (nawData.isNotEmpty()){
+                    break
+                }
+            }
+        }
     }
 
     private fun getDiary() {
@@ -62,10 +82,13 @@ class CalendarViewModel @Inject constructor(
             getListDiaryFromCalendarUseCase().collect {
                 listDiary = it as ArrayList<Diary>
 
-                loger(listDiary.toString())
-
             }
         }
+    }
+
+    fun setData(date: Long) {
+        val format = "yyyy.MM.dd"
+        nawData = SimpleDateFormat(format, Locale.getDefault()).format(date).toString()
     }
 
 

@@ -52,84 +52,80 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         setContent {
-            ProvideWindowInsets {
-                val theme = themeSetting.themeStream.collectAsState()
-                when (theme.value) {
-                    AppTheme.MODE_AUTO -> isSystemInDarkTheme()
-                    AppTheme.MODE_DAY -> {
-                        window.statusBarColor =
-                            ContextCompat.getColor(this, idnull.z.mydiary.R.color.white)
-                    }
-                    AppTheme.MODE_NIGHT -> {
-                        window.statusBarColor =
-                            ContextCompat.getColor(this, idnull.z.mydiary.R.color.black)
-                    }
+            val theme = themeSetting.themeStream.collectAsState()
+            when (theme.value) {
+                AppTheme.MODE_DAY -> {
+                    window.statusBarColor =
+                        ContextCompat.getColor(this, R.color.white)
                 }
-
-                val useDarkColors = when (theme.value) {
-                    AppTheme.MODE_AUTO -> isSystemInDarkTheme()
-                    AppTheme.MODE_DAY -> false
-                    AppTheme.MODE_NIGHT -> true
+                AppTheme.MODE_NIGHT -> {
+                    window.statusBarColor =
+                        ContextCompat.getColor(this, R.color.black)
                 }
+            }
 
-                MyDiaryTheme(darkTheme = useDarkColors) {
-                    Surface(color = MaterialTheme.colors.background)
-                    {
-                        val navController = rememberAnimatedNavController()
-                        AnimatedNavHost(
-                            navController = navController,
-                            startDestination = Screen.CodeScreen.route
+            val useDarkColors = when (theme.value) {
+                AppTheme.MODE_DAY -> false
+                AppTheme.MODE_NIGHT -> true
+            }
+
+            MyDiaryTheme(darkTheme = useDarkColors) {
+                Surface(color = MaterialTheme.colors.background)
+                {
+                    val navController = rememberAnimatedNavController()
+                    AnimatedNavHost(
+                        navController = navController,
+                        startDestination = Screen.CodeScreen.route
+                    ) {
+                        composable(
+                            Screen.CodeScreen.route,
+                            enterTransition = enterAnimatedTransition(Screen.DairyListScreen),
+                            exitTransition = exitAnimatedTransition(Screen.DairyListScreen)
                         ) {
-                            composable(
-                                Screen.CodeScreen.route,
-                                enterTransition = enterAnimatedTransition(Screen.DairyListScreen),
-                                exitTransition = exitAnimatedTransition(Screen.DairyListScreen)
-                            ) {
-                                CodeScreen(navController = navController)
-                            }
-                            composable(
-                                Screen.DairyListScreen.route,
-                                enterTransition = enterAnimatedTransition(Screen.AddEditDiaryScreen),
-                                exitTransition = exitAnimatedTransition(Screen.AddEditDiaryScreen),
-                                popEnterTransition = popEnterAnimatedTransition(Screen.AddEditDiaryScreen),
-                                popExitTransition = popExitAnimatedTransition(Screen.AddEditDiaryScreen)
-                            ) {
-                                DiaryListScreen(navController = navController,
-                                    onItemSelected = { theme -> themeSetting.theme = theme })
-                            }
-                            composable(
-                                route = Screen.AddEditDiaryScreen.route + "?id={id}",
-                                arguments = listOf(
-                                    navArgument(name = "id") {
-                                        type = NavType.IntType
-                                        defaultValue = -1
-                                    }
-                                ),
-                                enterTransition = enterAnimatedTransition(Screen.DairyListScreen),
-                                exitTransition = exitAnimatedTransition(Screen.DairyListScreen),
-                                popEnterTransition = popEnterAnimatedTransition(Screen.DairyListScreen),
-                                popExitTransition = popExitAnimatedTransition(Screen.DairyListScreen)
-                            ) {
-                                AddEditScreen(navController = navController)
-                            }
+                            CodeScreen(navController = navController)
+                        }
+                        composable(
+                            Screen.DairyListScreen.route,
+                            enterTransition = enterAnimatedTransition(Screen.AddEditDiaryScreen),
+                            exitTransition = exitAnimatedTransition(Screen.AddEditDiaryScreen),
+                            popEnterTransition = popEnterAnimatedTransition(Screen.AddEditDiaryScreen),
+                            popExitTransition = popExitAnimatedTransition(Screen.AddEditDiaryScreen)
+                        ) {
+                            DiaryListScreen(navController = navController)
+                        }
+                        composable(
+                            route = Screen.AddEditDiaryScreen.route + "?id={id}",
+                            arguments = listOf(
+                                navArgument(name = "id") {
+                                    type = NavType.IntType
+                                    defaultValue = -1
+                                }
+                            ),
+                            enterTransition = enterAnimatedTransition(Screen.DairyListScreen),
+                            exitTransition = exitAnimatedTransition(Screen.DairyListScreen),
+                            popEnterTransition = popEnterAnimatedTransition(Screen.DairyListScreen),
+                            popExitTransition = popExitAnimatedTransition(Screen.DairyListScreen)
+                        ) {
+                            AddEditScreen(navController = navController)
+                        }
 
-                            composable(
-                                route = Screen.SettingsScreen.route
-                            ) {
-                                SettingsScreen(navController)
-                            }
-                            composable(
-                                route = Screen.CalendarScreen.route
-                            ) {
-                                CalendarScreen(navController)
-                            }
-                            composable(
-                                route = Screen.AnalyticsScreen.route
-                            ) {
-                                AnalyticsScreen(navController)
-                            }
+                        composable(
+                            route = Screen.SettingsScreen.route
+                        ) {
+                            SettingsScreen(navController)
+                        }
+                        composable(
+                            route = Screen.CalendarScreen.route
+                        ) {
+                            CalendarScreen(navController)
+                        }
+                        composable(
+                            route = Screen.AnalyticsScreen.route
+                        ) {
+                            AnalyticsScreen(navController)
                         }
                     }
+
                 }
             }
         }

@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import idnull.z.mydiary.data.DiaryRepository
+import idnull.z.mydiary.data.TemporaryStorage
 import idnull.z.mydiary.domain.Diary
 import idnull.z.mydiary.domain.use_case.GetListDiaryUseCase
 import idnull.z.mydiary.ui.add_edit_screen.TextFieldState
@@ -13,6 +14,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
+import java.util.*
 import javax.inject.Inject
 
 @HiltViewModel
@@ -69,7 +72,10 @@ class DiaryListViewModel @Inject constructor(
         viewModelScope.launch {
             getListDiaryUseCase.invoke().collect {
                 listDiary.value = it
+                findId(it)
+
             }
+
         }
     }
 
@@ -106,18 +112,28 @@ class DiaryListViewModel @Inject constructor(
 
     }
 
-    fun testFun() {
+    fun recoverSearch() {
         _searchBar.value = searchBar.value.copy(
             text = EMPTY
         )
-
         search(EMPTY)
-
     }
 
     companion object {
         private const val EMPTY = ""
     }
 
+    private fun findId(list: List<Diary>) {
+        if (list.isEmpty()) return
 
+        val data = Calendar.getInstance().timeInMillis
+        val format = "d.MMM.yyyy"
+        val dateFormat = SimpleDateFormat(format, Locale.getDefault())
+        val utilsData = dateFormat.format(data).toString()
+
+        if (list[0].utilsDate == utilsData) {
+            TemporaryStorage.id = list[0].id
+        }
+
+    }
 }

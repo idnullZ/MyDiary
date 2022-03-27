@@ -8,7 +8,6 @@ import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -16,6 +15,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import idnull.z.mydiary.ui.add_edit_screen.components.ControlTextField
+import idnull.z.mydiary.ui.add_edit_screen.components.CurrentDate
 import idnull.z.mydiary.ui.add_edit_screen.components.ToolBar
 import kotlinx.coroutines.flow.collectLatest
 
@@ -23,8 +23,8 @@ import kotlinx.coroutines.flow.collectLatest
 @Composable
 fun AddEditScreen(
     navController: NavController,
-    viewModel: AddEditScreenViewModel = hiltViewModel(),
-    ) {
+    viewModel: AddEditViewModel = hiltViewModel(),
+) {
     val titleState = viewModel.title.value
     val contentState = viewModel.content.value
     val scaffoldState = rememberScaffoldState()
@@ -35,70 +35,72 @@ fun AddEditScreen(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .background(Color(0xff14181c))
         ) {
 
-            ToolBar(navController = navController, viewModel)
+            ToolBar(
+                navController = navController,
+                viewModel = viewModel,
+                deleteVisibility = viewModel.deleteVisibility.value,
+                saveVisibility = viewModel.saveVisibility.value
+            )
 
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(MaterialTheme.colors.surface)
 
-                Column(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .background(MaterialTheme.colors.surface)
-                        .padding(16.dp)
+            ) {
+                CurrentDate(viewModel.date.value)
 
-                ) {
-                    /**  Title TextField */
-                    ControlTextField(
-                        singleLine = true,
-                        maxLines = 1,
-                        text = titleState.text,
-                        hint = titleState.hint,
-                        onValueChange = {
-                            viewModel.obtainEvent(AddEditScreenEvent.EnteredTitle(it))
-                        },
-                        onFocusChange = {
-                            viewModel.obtainEvent(AddEditScreenEvent.ChangeTitleFocus(it))
-                        },
-                        isHintVisible = titleState.isHintVisible,
-                        textStyle = TextStyle(
-                            color = MaterialTheme.colors.onBackground,
-                            fontWeight = FontWeight.Normal,
-                            fontSize = 28.sp,
-                            letterSpacing = 0.sp
-                        ),
-                        modifier = Modifier.fillMaxWidth()
+                /**  Title TextField */
+                ControlTextField(
+                    singleLine = true,
+                    maxLines = 1,
+                    text = titleState.text,
+                    hint = titleState.hint,
+                    onValueChange = {
+                        viewModel.obtainEvent(AddEditScreenEvent.EnteredTitle(it))
+                    },
+                    onFocusChange = {
+                        viewModel.obtainEvent(AddEditScreenEvent.ChangeTitleFocus(it))
+                    },
+                    isHintVisible = titleState.isHintVisible,
+                    textStyle = TextStyle(
+                        color = MaterialTheme.colors.onBackground,
+                        fontWeight = FontWeight.Normal,
+                        fontSize = 28.sp,
+                        letterSpacing = 0.sp
+                    ),
+                    modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp)
 
-                    )
+                )
+                Spacer(modifier = Modifier.height(16.dp))
 
-                    Spacer(modifier = Modifier.height(16.dp))
+                /**  Content TextField */
+                ControlTextField(
 
+                    text = contentState.text,
+                    hint = contentState.hint,
+                    onValueChange = {
+                        viewModel.obtainEvent(AddEditScreenEvent.EnteredContent(it))
+                    },
+                    onFocusChange = {
+                        viewModel.obtainEvent(AddEditScreenEvent.ChangeContentFocus(it))
+                    },
+                    isHintVisible = contentState.isHintVisible,
 
-                    /**  Content TextField */
-                    ControlTextField(
+                    textStyle = TextStyle(
 
-                        text = contentState.text,
-                        hint = contentState.hint,
-                        onValueChange = {
-                            viewModel.obtainEvent(AddEditScreenEvent.EnteredContent(it))
-                        },
-                        onFocusChange = {
-                            viewModel.obtainEvent(AddEditScreenEvent.ChangeContentFocus(it))
-                        },
-                        isHintVisible = contentState.isHintVisible,
+                        color = MaterialTheme.colors.onBackground,
+                        fontWeight = FontWeight.Normal,
+                        fontSize = 20.sp,
+                        letterSpacing = 0.5.sp
+                    ),
 
-                        textStyle = TextStyle(
+                    modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp)
+                )
 
-                            color = MaterialTheme.colors.onBackground,
-                            fontWeight = FontWeight.Normal,
-                            fontSize = 20.sp,
-                            letterSpacing = 0.5.sp
-                        ),
-
-                        modifier = Modifier.fillMaxWidth()
-                    )
-
-                }
+            }
 
 
 

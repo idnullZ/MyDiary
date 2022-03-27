@@ -1,7 +1,9 @@
 package idnull.z.mydiary.ui.settings_screen.components
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Icon
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.NavigateNext
@@ -18,13 +20,14 @@ import androidx.compose.ui.unit.sp
 import idnull.z.mydiary.ui.theme.RoyalBlue
 
 @Composable
-fun SettingsItem(imageVector: ImageVector, text: String) {
+fun SettingsItem(imageVector: ImageVector, text: String, onClick :()->Unit = {}) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween,
         modifier = Modifier
             .fillMaxWidth()
             .height(56.dp)
+            .clickable { onClick() }
     ) {
         Row(
             horizontalArrangement = Arrangement.Start,
@@ -32,13 +35,13 @@ fun SettingsItem(imageVector: ImageVector, text: String) {
         ) {
             Icon(
                 imageVector = imageVector, contentDescription = text,
-                tint = Color.White, modifier = Modifier
+                tint = MaterialTheme.colors.onBackground, modifier = Modifier
                     .padding(start = 20.dp, top = 12.dp, bottom = 12.dp)
                     .size(24.dp)
             )
             Text(
                 text = text,
-                color = Color.White,
+                color = MaterialTheme.colors.onBackground,
                 fontSize = 14.sp,
                 fontFamily = FontFamily.Monospace,
                 fontWeight = FontWeight.ExtraLight,

@@ -18,7 +18,7 @@ interface DiaryDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertDairy(diaryUnit: DiaryUnit)
 
-    @Delete
-    suspend fun deleteDiary(diaryUnit: DiaryUnit)
+    @Query("DELETE FROM dairy_table WHERE id = :id")
+    suspend fun deleteDiary(id: Int)
 
 }

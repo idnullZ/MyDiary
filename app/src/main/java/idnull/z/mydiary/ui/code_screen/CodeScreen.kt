@@ -75,7 +75,6 @@ fun CodeScreen(
 
 
     LaunchedEffect(key1 = Unit){
-
         viewModel.init()
     }
 }

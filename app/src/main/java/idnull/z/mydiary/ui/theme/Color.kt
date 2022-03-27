@@ -14,6 +14,7 @@ val ColorFAB = Color( 0xFF5a9ecf)
 val RoyalBlue = Color(0xED7762FF)
 val CalendarBlue = Color(0xee00c7ff)
 val Yellow = Color(0xeeffbf08)
+val Grey = Color(0xee5e5e5e)
 
 val darkToolbarBackground = Color(0xff1f2428)
 val dayToolbarBackground = Color(0xFFFFFFFF)

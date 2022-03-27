@@ -8,15 +8,18 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import idnull.z.mydiary.data.DiaryRepository
+import idnull.z.mydiary.data.TemporaryStorage
 import idnull.z.mydiary.domain.DiaryUnit
+import idnull.z.mydiary.utils.convertDataFullInfo
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
 import java.util.*
 import javax.inject.Inject
 
 @HiltViewModel
-class AddEditScreenViewModel @Inject constructor(
+class AddEditViewModel @Inject constructor(
     private val repository: DiaryRepository,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
@@ -24,13 +27,21 @@ class AddEditScreenViewModel @Inject constructor(
     private var oldDate = -1L
     private var currentId: Int? = null
 
+    var date = mutableStateOf("")
+        private set
+
+    var saveVisibility = mutableStateOf(false)
+        private set
+
+    var deleteVisibility = mutableStateOf(false)
+        private set
+
     private val _diaryTitle = mutableStateOf(
         TextFieldState(
             hint = "Title"
         )
     )
     val title: State<TextFieldState> = _diaryTitle
-
 
     private val _diaryContent = mutableStateOf(
         TextFieldState(
@@ -44,28 +55,12 @@ class AddEditScreenViewModel @Inject constructor(
 
 
     init {
-
         viewModelScope.launch {
-
             savedStateHandle.get<Int>("id")?.let { id ->
-                if (id != -1) {
-                    repository.getDairyById(id)?.also {
-                        currentId = it.id
-                        oldDate = it.date
-                        _diaryTitle.value = title.value.copy(
-                            text = it.title,
-                            isHintVisible = false
-                        )
-                        _diaryContent.value = content.value.copy(
-                            text = it.content,
-                            isHintVisible = false
-                        )
-                    }
-                }
+                handleState(id)
             }
 
         }
-
     }
 
 
@@ -88,6 +83,9 @@ class AddEditScreenViewModel @Inject constructor(
                 _diaryContent.value = content.value.copy(
                     text = event.value
                 )
+                saveVisibility.value = _diaryContent.value.text.isNotEmpty()
+
+
             }
 
             is AddEditScreenEvent.ChangeContentFocus -> {
@@ -98,22 +96,19 @@ class AddEditScreenViewModel @Inject constructor(
             }
 
             is AddEditScreenEvent.SaveDiary -> {
-
-
                 viewModelScope.launch {
+                    val utilsData = convertToData(data = data)
                     try {
                         repository.insertDiary(
                             DiaryUnit(
                                 title = title.value.text,
                                 content = content.value.text,
                                 date = if (currentId == null) data else oldDate,
-                                id = currentId
+                                id = currentId,
+                                dateFromCheck = utilsData
                             )
                         )
-
                         _actionFlow.emit(AddEditScreenAction.SaveDiary)
-
-
                     } catch (e: Exception) {
 
                         _actionFlow.emit(
@@ -122,8 +117,6 @@ class AddEditScreenViewModel @Inject constructor(
                                 message = e.message ?: "Unexpected Error!"
                             )
                         )
-
-
                     }
                 }
 
@@ -132,14 +125,15 @@ class AddEditScreenViewModel @Inject constructor(
             is AddEditScreenEvent.DeleteDiary -> {
                 viewModelScope.launch {
                     try {
-                        repository.deleteDiary(
-                            DiaryUnit(
-                                title = title.value.text,
-                                content = content.value.text,
-                                date = data,
-                                id = currentId
+                        currentId?.let {
+                            repository.deleteDiary(
+                                id = it
                             )
-                        )
+                            if (TemporaryStorage.id == it) {
+                                TemporaryStorage.id = -1
+                            }
+                        }
+
                         _actionFlow.emit(AddEditScreenAction.SaveDiary)
                     } catch (e: Exception) {
                         _actionFlow.emit(
@@ -152,4 +146,35 @@ class AddEditScreenViewModel @Inject constructor(
             }
         }
     }
+
+    private suspend fun handleState(id: Int) {
+        if (id != -1) {
+            saveVisibility.value = true
+            deleteVisibility.value = true
+            repository.getDairyById(id)?.also {
+                currentId = it.id
+                oldDate = it.date
+                date.value = convertDataFullInfo(it.date)
+                _diaryTitle.value = title.value.copy(
+                    text = it.title,
+                    isHintVisible = false
+                )
+                _diaryContent.value = content.value.copy(
+                    text = it.content,
+                    isHintVisible = false
+                )
+            }
+        } else {
+            date.value = convertDataFullInfo(data)
+        }
+    }
+
+
+    private fun convertToData(data: Long): String {
+        val format = "d.MMM.yyyy"
+        val dateFormat = SimpleDateFormat(format, Locale.getDefault())
+        val utilsData = dateFormat.format(data).toString()
+        return utilsData
+    }
+
 }

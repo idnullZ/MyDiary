@@ -1,7 +1,15 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-    <style name="Theme.MyDiary" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
+    <style name="Theme.MyDiary" parent="Base.Theme.AppCompat">
         <!-- Primary brand color. -->
+
+
+
+
+        <item name="colorAccent">@color/calendar</item>   <!-- круг и текущая дата -->
+
+
+
         <item name="colorPrimary">@color/purple_500</item>
         <item name="colorPrimaryVariant">#000000</item>
         <item name="colorOnPrimary">@color/white</item>

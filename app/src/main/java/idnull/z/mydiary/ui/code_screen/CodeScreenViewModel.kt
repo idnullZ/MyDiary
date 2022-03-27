@@ -66,8 +66,6 @@ class CodeScreenViewModel @Inject constructor(
 
 
      fun init() {
-
-
         viewModelScope.launch {
             _isFirsOpen = repository.readFirstOpen()
             setIsFiresOpen()

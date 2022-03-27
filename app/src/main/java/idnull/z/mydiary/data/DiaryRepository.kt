@@ -19,8 +19,8 @@ class DiaryRepository @Inject constructor(
         dao.insertDairy(diaryUnit = diaryUnit)
     }
 
-    suspend fun deleteDiary(diaryUnit: DiaryUnit){
-        dao.deleteDiary(diaryUnit = diaryUnit)
+    suspend fun deleteDiary(id:Int){
+        dao.deleteDiary(id)
     }
 
 

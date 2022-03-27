@@ -7,17 +7,14 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.*
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.FabPosition
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Scaffold
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import idnull.z.mydiary.domain.themes.AppTheme
 import idnull.z.mydiary.ui.diary_list_screen.components.DiaryListItem
 import idnull.z.mydiary.ui.diary_list_screen.components.DiaryToolBar
 import idnull.z.mydiary.ui.shared_component.BottomBar
@@ -33,8 +30,7 @@ import kotlinx.coroutines.FlowPreview
 @Composable
 fun DiaryListScreen(
     navController: NavController,
-    viewModel: DiaryListViewModel = hiltViewModel(),
-    onItemSelected: (AppTheme) -> Unit
+    viewModel: DiaryListViewModel = hiltViewModel()
 ) {
     Scaffold(
         bottomBar = { BottomBar(navController = navController) },
@@ -50,11 +46,7 @@ fun DiaryListScreen(
                 .background(MaterialTheme.colors.surface)
         ) {
 
-            DiaryToolBar(
-                viewModel = viewModel,
-                onItemSelected = onItemSelected
-
-            )
+            DiaryToolBar(viewModel = viewModel)
 
             LazyColumn(
                 modifier = Modifier

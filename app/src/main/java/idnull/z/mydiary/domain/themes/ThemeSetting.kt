@@ -3,7 +3,6 @@ package idnull.z.mydiary.domain.themes
 import kotlinx.coroutines.flow.StateFlow
 
 enum class AppTheme {
-    MODE_AUTO,
     MODE_DAY,
     MODE_NIGHT;
 
