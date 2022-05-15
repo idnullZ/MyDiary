@@ -53,13 +53,5 @@ fun SettingsScreen(
             SettingsItem(imageVector = Icons.Outlined.Subject, "About")
         }
     }
-
-//    LaunchedEffect(key1 = viewModel.actionFlow) {
-//        viewModel.actionFlow.collectLatest {
-//            when (it) {
-//
-//            }
-//        }
-//    }
 }
 

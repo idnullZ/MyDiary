@@ -1,21 +1,13 @@
 package idnull.z.mydiary.domain.use_case
 
 import idnull.z.mydiary.data.DiaryRepository
-import idnull.z.mydiary.domain.Diary
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 class GetListDiaryFromCalendarUseCase @Inject constructor(
     private val repository: DiaryRepository
 ) {
-    operator fun invoke(): Flow<List<Diary>> {
-
-        return repository.getAllDairy().map { list ->
-            list.map { it.toDiaryCalendar(it) }
-
-        }
+    operator fun invoke() = repository.getAllDairy().map { list ->
+        list.map { it.toDiaryCalendar(it) }
     }
-
-
 }

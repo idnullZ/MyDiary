@@ -15,5 +15,5 @@ interface SettingModule {
 
     @Binds
     @Singleton
-     fun bindThemeSetting(themeSettingPreference: ThemeSettingPreference): ThemeSetting
+    fun bindThemeSetting(themeSettingPreference: ThemeSettingPreference): ThemeSetting
 }

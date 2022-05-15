@@ -3,7 +3,16 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/Torvald/.gradle/caches/transforms-3/49161f8d775ce65a9f5f6d4ba2a542bc/transformed/jetified-pluck-1.0.0-RC1/res/drawable/ic_camera.xml" value="0.199" />
+        <entry key="..\:/Users/Torvald/.gradle/caches/transforms-3/49161f8d775ce65a9f5f6d4ba2a542bc/transformed/jetified-pluck-1.0.0-RC1/res/drawable/ic_camera_moments.xml" value="0.13" />
+        <entry key="..\:/Users/Torvald/.gradle/caches/transforms-3/49161f8d775ce65a9f5f6d4ba2a542bc/transformed/jetified-pluck-1.0.0-RC1/res/drawable/ic_sad.xml" value="0.13" />
+        <entry key="..\:/Users/Torvald/AndroidStudioProjects/MyDiary/app/src/main/res/drawable/ic_add.xml" value="0.2911458333333333" />
+        <entry key="..\:/Users/Torvald/AndroidStudioProjects/MyDiary/app/src/main/res/drawable/ic_galery.xml" value="0.1" />
+        <entry key="..\:/Users/Torvald/AndroidStudioProjects/MyDiary/app/src/main/res/drawable/ic_note.xml" value="0.19444444444444445" />
+        <entry key="..\:/Users/Torvald/AndroidStudioProjects/MyDiary/app/src/main/res/drawable/ic_photo_camera.xml" value="0.13" />
+        <entry key="..\:/Users/Torvald/AndroidStudioProjects/MyDiary/app/src/main/res/drawable/ic_sad.xml" value="0.151" />
         <entry key="..\:/Users/Torvald/AndroidStudioProjects/MyDiary/app/src/main/res/drawable/ic_trash.xml" value="0.1" />
+        <entry key="..\:/Users/Torvald/AndroidStudioProjects/MyDiary/app/src/main/res/drawable/ic_writting.xml" value="0.19074074074074074" />
       </map>
     </option>
   </component>

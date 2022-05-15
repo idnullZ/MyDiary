@@ -7,6 +7,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -16,16 +17,24 @@ fun TextStd(
     value: String,
     modifier: Modifier = Modifier,
     maxLine: Int = 1,
-    fontSize: Int = 14
+    fontSize: Int = 14,
+    textAlign: TextAlign = TextAlign.Center,
+    color: Color = Color.White,
+    onClick: () -> Unit = {}
 ) {
     Text(
         text = value,
-        color = Color.White,
+        color = color,
         fontSize = fontSize.sp,
         maxLines = maxLine,
         fontFamily = FontFamily.Monospace,
         fontWeight = FontWeight.ExtraLight,
-        modifier = modifier.padding(16.dp),
-        overflow = TextOverflow.Ellipsis
+        modifier = modifier
+            .padding(16.dp)
+            .noRippleClickable {
+                onClick()
+            },
+        overflow = TextOverflow.Ellipsis,
+        textAlign = textAlign,
     )
 }

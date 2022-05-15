@@ -17,13 +17,10 @@ fun BottomBar(navController: NavController) {
         BottomBarScreen.AnalyticsScreen,
         BottomBarScreen.SettingsScreen,
     )
-//    val navBackStackEntry by navController.currentBackStackEntryAsState()
-//    val currentDestination = navBackStackEntry?.destination
 
     BottomNavigation(
         contentColor = Color.Black
     ) {
-
         screens.forEach { screen ->
             AddItem(
                 screen = screen,

@@ -23,7 +23,6 @@ class CalendarViewModel @Inject constructor(
 
     private var nawData = ""
 
-
     var diary = mutableStateOf("")
         private set
 
@@ -90,6 +89,5 @@ class CalendarViewModel @Inject constructor(
         val format = "yyyy.MM.dd"
         nawData = SimpleDateFormat(format, Locale.getDefault()).format(date).toString()
     }
-
 
 }

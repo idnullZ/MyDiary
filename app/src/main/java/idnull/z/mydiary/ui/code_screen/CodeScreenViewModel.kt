@@ -1,7 +1,9 @@
 package idnull.z.mydiary.ui.code_screen
 
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -16,40 +18,39 @@ import javax.inject.Inject
 class CodeScreenViewModel @Inject constructor(
     private val repository: DataStoreRepository,
 ) : ViewModel() {
-    private var _isFirsOpen: Boolean = false
-    val isFirstOpen = mutableStateOf(false)
+    private var _isFirsOpen: Boolean = true
+    private var nawCode = ""
 
+    private val list = listOf("1", "2", "3", "4", "5", "6", "7", "8", "9", " ", "0", " ")
 
     private val _actionFlow = MutableSharedFlow<CodeScreenAction>()
     val actionFlow = _actionFlow.asSharedFlow()
 
+    var countItemPassword by mutableStateOf(0)
+        private set
+    var passwordCorrect by mutableStateOf(false)
+        private set
 
-    val countItemPassword = mutableStateOf(0)
-    val passwordCorrect = mutableStateOf(false)
-
-
-    private val _numbers = mutableStateListOf("1", "2", "3", "4", "5", "6", "7", "8", "9", " ", "0", " ")
-    val numbers = _numbers
-
-    private var nawCode = ""
-//    init {
-//        init()
-//    }
+    val numbers by mutableStateOf(list)
 
     fun setOneNumber(number: String) {
         nawCode += number
-        countItemPassword.value++
+        countItemPassword++
         checkingPasscode()
     }
 
+    fun passwordCorrected() {
+        passwordCorrect = false
+    }
+
     private fun checkingPasscode() {
-        if (countItemPassword.value == 4) {
+        if (countItemPassword == 4) {
             if (_isFirsOpen) {
                 saveCodeToRepository()
             } else {
                 if (checkingEqualityPassword()) {
-                    passwordCorrect.value = true
-                }else{
+                    passwordCorrect = true
+                } else {
                     viewModelScope.launch {
                         _actionFlow.emit(
                             CodeScreenAction.ShowSnackBar(
@@ -59,16 +60,8 @@ class CodeScreenViewModel @Inject constructor(
                     }
                 }
             }
-            countItemPassword.value = 0
+            countItemPassword = 0
             nawCode = ""
-        }
-    }
-
-
-     fun init() {
-        viewModelScope.launch {
-            _isFirsOpen = repository.readFirstOpen()
-            setIsFiresOpen()
         }
     }
 
@@ -76,29 +69,22 @@ class CodeScreenViewModel @Inject constructor(
         val value = nawCode
         viewModelScope.launch {
             repository.savePasscode(nawCode)
-            _actionFlow.emit(CodeScreenAction.ShowSnackBar(
-                message = "Your code $value"
-            ))
+            _actionFlow.emit(
+                CodeScreenAction.ShowSnackBar(
+                    message = "Your code $value"
+                )
+            )
             nawCode = ""
             _isFirsOpen = false
-            repository.saveFirstOpen(false)
         }
     }
 
-
-    private fun checkingEqualityPassword():Boolean{
-         var trueCode = ""
+    private fun checkingEqualityPassword(): Boolean {
+        var trueCode = ""
         viewModelScope.launch {
             trueCode = repository.readPasscode()
         }
-        return  trueCode == nawCode
+        return trueCode == nawCode
     }
-
-   private suspend fun setIsFiresOpen(){
-        isFirstOpen.value = repository.readFirstOpen()
-       _actionFlow.emit(CodeScreenAction.SetIsFirstOpenValue)
-
-    }
-
 
 }

@@ -2,10 +2,16 @@ package idnull.z.mydiary.ui.shared_component.animate
 
 import androidx.compose.animation.*
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.navigation.NavBackStackEntry
-import idnull.z.mydiary.ui.MainActivity
+import idnull.z.mydiary.ui.main.MainActivity.Companion.ANIMATION_DURATION
 import idnull.z.mydiary.utils.Screen
 
+
+@OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterialApi::class)
+@ExperimentalFoundationApi
 @ExperimentalAnimationApi
 fun enterAnimatedTransition(screen: Screen): AnimatedContentScope<String>.(
     initial: NavBackStackEntry,
@@ -16,13 +22,15 @@ fun enterAnimatedTransition(screen: Screen): AnimatedContentScope<String>.(
            screen.route ->
                 slideInHorizontally(
                     initialOffsetX = { 500 },
-                    animationSpec = tween(MainActivity.ANIMATION_DURATION)
-                ) + fadeIn(animationSpec = tween(MainActivity.ANIMATION_DURATION))
+                    animationSpec = tween(ANIMATION_DURATION)
+                ) + fadeIn(animationSpec = tween(ANIMATION_DURATION))
             else -> null
         }
     }
 
 
+@ExperimentalComposeUiApi
+@OptIn(ExperimentalFoundationApi::class, ExperimentalMaterialApi::class)
 @ExperimentalAnimationApi
 fun popEnterAnimatedTransition(screen: Screen): AnimatedContentScope<String>.(
     initial: NavBackStackEntry,
@@ -33,8 +41,8 @@ fun popEnterAnimatedTransition(screen: Screen): AnimatedContentScope<String>.(
             screen.route ->
                 slideInHorizontally(
                     initialOffsetX = { -500 },
-                    animationSpec = tween(MainActivity.ANIMATION_DURATION)
-                ) + fadeIn(animationSpec = tween(MainActivity.ANIMATION_DURATION))
+                    animationSpec = tween(ANIMATION_DURATION)
+                ) + fadeIn(animationSpec = tween(ANIMATION_DURATION))
 
 
             else -> null
@@ -42,6 +50,8 @@ fun popEnterAnimatedTransition(screen: Screen): AnimatedContentScope<String>.(
     }
 
 
+@ExperimentalComposeUiApi
+@OptIn(ExperimentalFoundationApi::class, ExperimentalMaterialApi::class)
 @ExperimentalAnimationApi
 fun exitAnimatedTransition(screen: Screen): AnimatedContentScope<String>.(
     initial: NavBackStackEntry,
@@ -52,14 +62,16 @@ fun exitAnimatedTransition(screen: Screen): AnimatedContentScope<String>.(
             screen.route ->
                 slideOutHorizontally(
                     targetOffsetX = { -500 },
-                    animationSpec = tween(MainActivity.ANIMATION_DURATION)
-                ) + fadeOut(animationSpec = tween(MainActivity.ANIMATION_DURATION))
+                    animationSpec = tween(ANIMATION_DURATION)
+                ) + fadeOut(animationSpec = tween(ANIMATION_DURATION))
 
             else -> null
         }
 
     }
 
+@ExperimentalComposeUiApi
+@OptIn(ExperimentalFoundationApi::class, ExperimentalMaterialApi::class)
 @ExperimentalAnimationApi
 fun popExitAnimatedTransition(screen: Screen): AnimatedContentScope<String>.(
     initial: NavBackStackEntry,
@@ -71,9 +83,9 @@ fun popExitAnimatedTransition(screen: Screen): AnimatedContentScope<String>.(
 
                 slideOutHorizontally(
                     targetOffsetX = { 500 },
-                    animationSpec = tween(MainActivity.ANIMATION_DURATION)
+                    animationSpec = tween(ANIMATION_DURATION)
 
-                ) + fadeOut(animationSpec = tween(MainActivity.ANIMATION_DURATION))
+                ) + fadeOut(animationSpec = tween(ANIMATION_DURATION))
 
             else -> null
         }

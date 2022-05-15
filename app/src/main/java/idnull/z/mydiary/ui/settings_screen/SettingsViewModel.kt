@@ -6,7 +6,6 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import idnull.z.mydiary.domain.themes.AppTheme
 import idnull.z.mydiary.domain.themes.ThemeSetting
-import idnull.z.mydiary.utils.loger
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
@@ -29,7 +28,6 @@ class SettingsViewModel @Inject constructor(private val themeSetting: ThemeSetti
                 viewModelScope.launch {
                     val mode = if (event.value) AppTheme.MODE_NIGHT else AppTheme.MODE_DAY
                     themeSetting.theme = mode
-                    loger(event.value.toString())
                 }
             }
         }

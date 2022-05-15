@@ -1,41 +1,38 @@
 package idnull.z.mydiary.data
 
-
 import android.content.Context
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import dagger.hilt.android.qualifiers.ApplicationContext
 import idnull.z.mydiary.dataStore
-
+import idnull.z.mydiary.utils.Screen
 import kotlinx.coroutines.flow.firstOrNull
 import javax.inject.Inject
 
-
 class DataStoreRepository @Inject constructor(
-   @ApplicationContext val context: Context
+    @ApplicationContext val context: Context
 ) {
-    private val isFirsOpenKey = booleanPreferencesKey("isFirsOpen")
+    private val firstScreen = stringPreferencesKey("firstScreen")
     private val codeKey = stringPreferencesKey("CodeOpen")
-    suspend fun saveFirstOpen(isFirstOpen: Boolean) {
+
+    suspend fun savePasscode(code: String) {
         context.dataStore.edit {
-            it[isFirsOpenKey] = isFirstOpen
+            it[codeKey] = code
+        }
+        saveFirstScreen(Screen.CodeScreen.route)
+    }
+
+    suspend fun readPasscode() =
+        context.dataStore.data.firstOrNull()?.get(codeKey) ?: ""
+
+    private suspend fun saveFirstScreen(screen: String) {
+        context.dataStore.edit {
+            it[firstScreen] = screen
         }
     }
-     suspend fun readFirstOpen(): Boolean {
-        return context.dataStore.data.firstOrNull()?.get(isFirsOpenKey) ?: true
 
-    }
-
-   suspend fun savePasscode(code:String){
-       context.dataStore.edit {
-           it[codeKey]= code
-       }
-
-    }
-
-   suspend fun readPasscode():String{
-       return context.dataStore.data.firstOrNull()?.get(codeKey) ?:""
-   }
+    suspend fun readFirstScreen() =
+        context.dataStore.data.firstOrNull()?.get(firstScreen) ?: Screen.DairyListScreen.route
 
 }

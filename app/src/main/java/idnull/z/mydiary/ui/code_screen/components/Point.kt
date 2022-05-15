@@ -20,7 +20,7 @@ fun Point(pointNumber: Int, viewModel: CodeScreenViewModel) {
             .size(8.dp)
             .clip(CircleShape)
             .background(
-                if (pointNumber < viewModel.countItemPassword.value) {
+                if (pointNumber < viewModel.countItemPassword) {
                     Color.Red
                 } else {
                     MaterialTheme.colors.onBackground

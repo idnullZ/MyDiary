@@ -7,22 +7,17 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import androidx.navigation.NavController
-import idnull.z.mydiary.data.TemporaryStorage
 import idnull.z.mydiary.ui.theme.ColorFAB
 import idnull.z.mydiary.utils.Screen
 
 @Composable
-fun FabButton(navController:NavController) {
-
-
-
-
+fun FabButton(navController: NavController) {
     FloatingActionButton(
         backgroundColor = ColorFAB,
         onClick = {
-            navController.navigate(Screen.AddEditDiaryScreen.route+"?id=${TemporaryStorage.id}")
+            navController.navigate(Screen.AddEditDiaryScreen.route)
         }
     ) {
-        Icon(imageVector = Icons.Default.Add, contentDescription = "Add" , tint = Color.White)
+        Icon(imageVector = Icons.Default.Add, contentDescription = "Add", tint = Color.White)
     }
 }

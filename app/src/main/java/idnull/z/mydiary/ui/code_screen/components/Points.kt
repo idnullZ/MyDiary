@@ -13,9 +13,7 @@ import idnull.z.mydiary.ui.code_screen.CodeScreenViewModel
 
 @Composable
 fun Points(viewModel: CodeScreenViewModel) {
-
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
-
         Text(
             text = "Enter your passcode",
             style = TextStyle(color = MaterialTheme.colors.onBackground),
@@ -23,15 +21,16 @@ fun Points(viewModel: CodeScreenViewModel) {
             modifier = Modifier.padding(top = 60.dp, bottom = 36.dp)
         )
         Row(
-            horizontalArrangement = Arrangement.SpaceBetween,
+            horizontalArrangement = Arrangement.SpaceAround,
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 60.dp)
         ) {
-            Point(pointNumber = 0, viewModel = viewModel)
-            Point(pointNumber = 1, viewModel = viewModel)
-            Point(pointNumber = 2, viewModel = viewModel)
-            Point(pointNumber = 3, viewModel = viewModel)
+            for (i in 0..3) {
+                Point(pointNumber = i, viewModel = viewModel)
+            }
         }
+        
+        Spacer(modifier = Modifier.height(32.dp))
     }
 }

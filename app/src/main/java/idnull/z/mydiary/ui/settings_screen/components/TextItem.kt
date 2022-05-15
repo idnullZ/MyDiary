@@ -23,10 +23,3 @@ fun TextItem(text: String) {
         )
     }
 }
-
-@Preview
-@Composable
-fun tex() {
-    TextItem(text = "OTHER")
-
-}

@@ -57,12 +57,7 @@ fun CalendarScreen(
                     .align(Alignment.CenterHorizontally)
                     .padding(top = 32.dp)
             )
-
             DiaryContent(viewModel.diary.value)
-
-
         }
-
-
     }
 }

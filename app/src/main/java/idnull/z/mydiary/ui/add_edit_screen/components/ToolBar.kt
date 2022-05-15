@@ -12,6 +12,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
@@ -28,6 +29,7 @@ fun ToolBar(
     deleteVisibility: Boolean = false
 
 ) {
+    val context = LocalContext.current
     Row(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween,
@@ -70,7 +72,7 @@ fun ToolBar(
                         .clickable {
                             viewModel.obtainEvent(AddEditScreenEvent.DeleteDiary)
                         }
-                        .padding(start = 8.dp,end = 16.dp)
+                        .padding(start = 8.dp, end = 16.dp)
                         .size(24.dp),
                     tint = Color.Red)
             }

@@ -9,14 +9,15 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.material.rememberScaffoldState
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import idnull.z.mydiary.ui.code_screen.components.GridNumbers
+import idnull.z.mydiary.ui.code_screen.components.HelloUser
 import idnull.z.mydiary.ui.code_screen.components.Points
-import idnull.z.mydiary.ui.code_screen.components.ShowAlertDialog
 import idnull.z.mydiary.utils.Screen
 import kotlinx.coroutines.flow.collectLatest
 
@@ -29,34 +30,26 @@ fun CodeScreen(
     viewModel: CodeScreenViewModel = hiltViewModel(),
 ) {
     val scaffoldState = rememberScaffoldState()
-    var stateIsFirstOpen by remember { mutableStateOf(false) }
     Scaffold(scaffoldState = scaffoldState) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .background(color = MaterialTheme.colors.surface),
-            verticalArrangement = Arrangement.SpaceBetween
+            verticalArrangement = Arrangement.SpaceAround,
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
+            HelloUser()
             Points(viewModel = viewModel)
             GridNumbers(numbers = viewModel.numbers, viewModel = viewModel)
         }
     }
-    if (viewModel.passwordCorrect.value) {
-        viewModel.passwordCorrect.value = false
-
-        navController.navigate(Screen.DairyListScreen.route){
-            popUpTo(Screen.CodeScreen.route){
+    if (viewModel.passwordCorrect) {
+        viewModel.passwordCorrected()
+        navController.navigate(Screen.DairyListScreen.route) {
+            popUpTo(Screen.CodeScreen.route) {
                 inclusive = true
             }
         }
-
-    }
-    ShowAlertDialog(
-        textMain = "please set new code",
-        textTitle = "Warning",
-        showState = stateIsFirstOpen
-    ) {
-        stateIsFirstOpen = false
     }
     LaunchedEffect(key1 = true) {
         viewModel.actionFlow.collectLatest {
@@ -66,18 +59,7 @@ fun CodeScreen(
                         message = it.message
                     )
                 }
-                is CodeScreenAction.SetIsFirstOpenValue -> {
-                    stateIsFirstOpen = viewModel.isFirstOpen.value
-                }
             }
         }
     }
-
-
-    LaunchedEffect(key1 = Unit){
-        viewModel.init()
-    }
 }
-
-
-
