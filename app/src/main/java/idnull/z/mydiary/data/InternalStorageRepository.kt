@@ -3,15 +3,7 @@ package idnull.z.mydiary.data
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material.Scaffold
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.semantics.Role.Companion.Image
-import coil.compose.rememberImagePainter
 import dagger.hilt.android.qualifiers.ApplicationContext
 import idnull.z.mydiary.domain.InternalStoragePhoto
 import idnull.z.mydiary.utils.removeLast4
@@ -32,8 +24,6 @@ class InternalStorageRepository @Inject constructor(
 
 
     }
-
-
     fun saveImages(images: List<InternalStoragePhoto>): String {
         val names = mutableListOf<String>()
         if (images.isEmpty()) return ""

@@ -6,5 +6,6 @@ data class AddEditScreenState(
     val date: String = "",
     val saveVisibility: Boolean = false,
     val deleteVisibility: Boolean = false,
-    val images: MutableList<InternalStoragePhoto> = emptyList<InternalStoragePhoto>().toMutableList()
+    val showSlider: Boolean = false,
+    val images: List<InternalStoragePhoto> = emptyList()
 )

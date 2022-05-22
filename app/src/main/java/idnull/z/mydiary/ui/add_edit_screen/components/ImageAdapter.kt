@@ -1,6 +1,7 @@
 package idnull.z.mydiary.ui.add_edit_screen.components
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyRow
@@ -12,20 +13,22 @@ import androidx.compose.ui.unit.dp
 import idnull.z.mydiary.domain.InternalStoragePhoto
 
 @Composable
-fun ImageAdapter(images: List<InternalStoragePhoto>) {
+fun ImageAdapter(images: List<InternalStoragePhoto>, onClick: () -> Unit) {
     LazyRow(modifier = Modifier.fillMaxWidth()) {
         items(images) {
-            ImageItem(image = it)
+            ImageItem(image = it, onClick)
         }
     }
 }
 
 @Composable
-fun ImageItem(image: InternalStoragePhoto) {
+fun ImageItem(image: InternalStoragePhoto, onClick: () -> Unit) {
     Image(
         bitmap = image.bmp.asImageBitmap(),
         contentDescription = "Image",
-        modifier = Modifier.size(100.dp)
+        modifier = Modifier
+            .size(100.dp)
+            .clickable { onClick() }
     )
 }
 

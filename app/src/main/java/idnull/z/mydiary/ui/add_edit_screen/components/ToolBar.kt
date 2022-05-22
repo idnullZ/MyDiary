@@ -38,14 +38,14 @@ fun ToolBar(
             .fillMaxWidth()
             .background(color = MaterialTheme.colors.surface)
     ) {
-        Icon(imageVector = Icons.Rounded.Clear, contentDescription = "Clear",
-
+        Icon(
+            imageVector = Icons.Rounded.Clear,
+            contentDescription = "Clear",
             modifier = Modifier
                 .clickable { navController.navigateUp() }
                 .padding(horizontal = 16.dp)
                 .size(24.dp),
             tint = MaterialTheme.colors.onBackground
-
         )
         Row(
             verticalAlignment = Alignment.CenterVertically,
@@ -69,12 +69,11 @@ fun ToolBar(
                     painter = painterResource(id = R.drawable.ic_trash),
                     contentDescription = "Delete button",
                     modifier = Modifier
-                        .clickable {
-                            viewModel.obtainEvent(AddEditScreenEvent.DeleteDiary)
-                        }
+                        .clickable { viewModel.obtainEvent(AddEditScreenEvent.DeleteDiary) }
                         .padding(start = 8.dp, end = 16.dp)
                         .size(24.dp),
-                    tint = Color.Red)
+                    tint = Color.Red
+                )
             }
 
         }

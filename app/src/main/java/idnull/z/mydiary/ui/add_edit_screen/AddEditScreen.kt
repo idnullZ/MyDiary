@@ -6,11 +6,13 @@ import android.app.Activity
 import android.graphics.BitmapFactory
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.result.launch
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -18,13 +20,13 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import idnull.z.mydiary.ui.add_edit_screen.components.*
 import idnull.z.mydiary.ui.shared_component.PermissionApp
-import idnull.z.mydiary.utils.getCameraCaptureIntentWithName
+import idnull.z.mydiary.utils.checkPermissionImage
 import idnull.z.mydiary.utils.getGalleryCaptureIntent
 import idnull.z.mydiary.utils.openSettings
-import kotlinx.coroutines.CoroutineExceptionHandler
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import java.io.InputStream
+import java.lang.Exception
 
 @SuppressLint("CoroutineCreationDuringComposition")
 @ExperimentalMaterialApi
@@ -33,9 +35,6 @@ fun AddEditScreen(
     navController: NavController,
     viewModel: AddEditViewModel = hiltViewModel(),
 ) {
-    val errorHandler = CoroutineExceptionHandler { _, throwable ->
-        viewModel.obtainEvent(AddEditScreenEvent.Error(throwable.message ?: "Unexpected Error!"))
-    }
     val scope = rememberCoroutineScope()
     val context = LocalContext.current
     val titleState = viewModel.title.value
@@ -45,42 +44,47 @@ fun AddEditScreen(
     val bottomSheetScaffoldState = rememberBottomSheetScaffoldState(
         bottomSheetState = BottomSheetState(BottomSheetValue.Collapsed)
     )
-    var cameraFileName by remember { mutableStateOf("") }
-    var requestPermission by remember { mutableStateOf(false) }
-
-    val galleryLauncher =
-        rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-            if (result.resultCode == Activity.RESULT_OK) {
-                val imageUri = result.data?.data
-                scope.launch(errorHandler) {
-                    val imageStream: InputStream? =
-                        imageUri?.let { context.contentResolver.openInputStream(it) }
-                    val selectedImage = BitmapFactory.decodeStream(imageStream)
-                    viewModel.obtainEvent(AddEditScreenEvent.AddBitmap(selectedImage))
-                }
-            }
-        }
+    var requestPermission by rememberSaveable { mutableStateOf(false) }
 
     val cameraLauncher =
-        rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-            if (result.resultCode == Activity.RESULT_OK) {
-                viewModel.obtainEvent(AddEditScreenEvent.SaveCameraImage(cameraFileName))
+        rememberLauncherForActivityResult(ActivityResultContracts.TakePicturePreview()) {
+            viewModel.obtainEvent(AddEditScreenEvent.AddBitmap(it))
+        }
+
+    val galleryLauncher =
+        rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) { activityResult ->
+            if (activityResult.resultCode == Activity.RESULT_OK) {
+                val imageUri = activityResult.data?.data
+                scope.launch(Dispatchers.IO) {
+                    try {
+                        val stream = imageUri?.let { context.contentResolver.openInputStream(it) }
+                        val selectedImage = BitmapFactory.decodeStream(stream)
+                        viewModel.obtainEvent(AddEditScreenEvent.AddBitmap(selectedImage))
+                    } catch (error: Exception) {
+                        viewModel.obtainEvent(AddEditScreenEvent.Error(error.message))
+                    }
+
+                }
             }
         }
     BottomSheet(bottomSheetScaffoldState, answer = { choiceDialog ->
         when (choiceDialog) {
-            is ChoiceDialog.Camera -> {
-                val (intent, fileName) = getCameraCaptureIntentWithName()
-                cameraFileName = fileName
-                cameraLauncher.launch(intent)
-            }
+            is ChoiceDialog.Camera -> cameraLauncher.launch()
             is ChoiceDialog.Gallery -> galleryLauncher.launch(getGalleryCaptureIntent())
             is ChoiceDialog.Cancel -> viewModel.obtainEvent(AddEditScreenEvent.CancelDialog)
         }
         scope.launch { bottomSheetScaffoldState.bottomSheetState.collapse() }
     }) {
+        if (screenState.showSlider){
+            Slider(screenState.images){
+                viewModel.obtainEvent(AddEditScreenEvent.ChangeSlider(false))
+            }
+        }
         Scaffold(scaffoldState = scaffoldState) {
             if (requestPermission) {
+                LaunchedEffect(key1 = Unit) {
+                    requestPermission = checkPermissionImage(context)
+                }
                 PermissionApp(
                     permissions = listOf(
                         Manifest.permission.CAMERA,
@@ -108,7 +112,9 @@ fun AddEditScreen(
                             .background(MaterialTheme.colors.surface)
 
                     ) {
-                        ImageAdapter(images = screenState.images)
+                        ImageAdapter(images = screenState.images){
+                            viewModel.obtainEvent(AddEditScreenEvent.ChangeSlider(true))
+                        }
                         CurrentDate(date = screenState.date) { requestPermission = true }
                         TextFields(titleState, viewModel, contentState)
                     }
@@ -120,8 +126,7 @@ fun AddEditScreen(
                                         message = it.message
                                     )
                                 }
-                                is AddEditScreenAction.SaveDiary -> navController.navigateUp()
-                                is AddEditScreenAction.DeleteDiary -> navController.navigateUp()
+                                is AddEditScreenAction.NavigateUp -> navController.navigateUp()
                             }
                         }
                     }

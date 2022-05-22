@@ -9,8 +9,8 @@ sealed class AddEditScreenEvent {
     data class EnteredContent(val value: String) : AddEditScreenEvent()
     data class ChangeContentFocus(val focusState: FocusState) : AddEditScreenEvent()
     data class AddBitmap(val bitmap: Bitmap?) : AddEditScreenEvent()
-    data class SaveCameraImage(val cameraFileName: String) : AddEditScreenEvent()
-    data class Error(val value: String) : AddEditScreenEvent()
+    data class Error(val value: String?) : AddEditScreenEvent()
+    data class ChangeSlider(val isVisible: Boolean) : AddEditScreenEvent()
 
     object SaveDiary : AddEditScreenEvent()
     object CancelDialog : AddEditScreenEvent()

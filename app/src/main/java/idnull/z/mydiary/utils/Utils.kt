@@ -1,33 +1,48 @@
 package idnull.z.mydiary.utils
 
+import android.Manifest
 import android.content.Context
 import android.content.Intent
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
-import android.graphics.ImageDecoder
+import android.content.pm.PackageManager
 import android.net.Uri
-import android.os.Build
 import android.provider.MediaStore
 import android.provider.Settings
 import android.util.Log
-import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import idnull.z.mydiary.domain.Diary
 import idnull.z.mydiary.domain.DiaryUnit
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
-import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.*
 
-fun createBitmapFromUri(uri: Uri?, context: Context): Bitmap? =
-    if (Build.VERSION.SDK_INT < 28) {
-        MediaStore.Images.Media.getBitmap(context.contentResolver, uri)
-    } else {
-        requireNotNull(uri)
-        val source = ImageDecoder.createSource(context.contentResolver, uri)
-        ImageDecoder.decodeBitmap(source)
+
+const val MIME_TYPE_IMAGE_ALL = "image/*"
+const val MIME_TYPE_IMAGE_JPEG = "image/jpeg"
+const val MIME_TYPE_IMAGE_PNG = "image/png"
+const val MIME_TYPE_IMAGE_JPG = "image/jpg"
+
+
+fun getGalleryCaptureIntent() =
+    Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI).apply {
+        type = MIME_TYPE_IMAGE_ALL
+        flags = Intent.FLAG_GRANT_READ_URI_PERMISSION
+        val mimeTypes = arrayOf(MIME_TYPE_IMAGE_JPEG, MIME_TYPE_IMAGE_PNG, MIME_TYPE_IMAGE_JPG)
+        putExtra(Intent.EXTRA_MIME_TYPES, mimeTypes)
     }
 
+fun checkPermissionImage(context: Context) =
+    checkPermissionCamera(context) || checkPermissionStorage(context)
+
+fun checkPermissionCamera(context: Context): Boolean =
+    ContextCompat.checkSelfPermission(
+        context,
+        Manifest.permission.CAMERA
+    ) == PackageManager.PERMISSION_GRANTED
+
+fun checkPermissionStorage(context: Context): Boolean =
+    ContextCompat.checkSelfPermission(
+        context,
+        Manifest.permission.READ_EXTERNAL_STORAGE
+    ) == PackageManager.PERMISSION_GRANTED
 
 fun openSettings(context: Context) {
     val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
@@ -61,4 +76,3 @@ fun convertDataFullInfo(date: Long) =
 fun loger(value: Any = "work") {
     Log.d("TAGMYLOGERTAG", "LOG: $value")
 }
-
