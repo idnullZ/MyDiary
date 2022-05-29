@@ -36,9 +36,7 @@ fun DiaryToolBar(viewModel: DiaryListViewModel) {
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
-
         if (searchBarVisibility) {
-
             Row(
                 modifier = Modifier
                     .height(56.dp),
@@ -80,8 +78,7 @@ fun DiaryToolBar(viewModel: DiaryListViewModel) {
                         fontSize = 20.sp,
                         letterSpacing = 0.5.sp
                     ),
-                    modifier = Modifier
-                        .fillMaxWidth()
+                    modifier = Modifier.fillMaxWidth()
                 )
             }
         } else {

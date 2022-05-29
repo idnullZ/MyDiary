@@ -13,12 +13,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.google.accompanist.pager.ExperimentalPagerApi
 import idnull.z.mydiary.ui.shared_component.BottomBar
 import idnull.z.mydiary.ui.shared_component.FabButton
 import idnull.z.mydiary.ui.shared_component.TopBar
 import idnull.z.mydiary.ui.theme.PerfectDark
 
 
+@OptIn(ExperimentalPagerApi::class)
 @ExperimentalMaterialApi
 @Composable
 fun AnalyticsScreen(navController: NavController) {
@@ -37,7 +39,6 @@ fun AnalyticsScreen(navController: NavController) {
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-
 
         }
 

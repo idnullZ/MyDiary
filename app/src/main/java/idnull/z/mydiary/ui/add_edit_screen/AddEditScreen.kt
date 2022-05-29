@@ -1,12 +1,10 @@
 package idnull.z.mydiary.ui.add_edit_screen
 
-import android.Manifest
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.graphics.BitmapFactory
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.activity.result.launch
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -18,17 +16,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.google.accompanist.pager.ExperimentalPagerApi
 import idnull.z.mydiary.ui.add_edit_screen.components.*
 import idnull.z.mydiary.ui.shared_component.PermissionApp
-import idnull.z.mydiary.utils.checkPermissionImage
-import idnull.z.mydiary.utils.getGalleryCaptureIntent
-import idnull.z.mydiary.utils.openSettings
+import idnull.z.mydiary.utils.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import java.lang.Exception
 
-@SuppressLint("CoroutineCreationDuringComposition")
+@OptIn(ExperimentalPagerApi::class)
+@SuppressLint("CoroutineCreationDuringComposition", "StateFlowValueCalledInComposition")
 @ExperimentalMaterialApi
 @Composable
 fun AddEditScreen(
@@ -45,16 +42,24 @@ fun AddEditScreen(
         bottomSheetState = BottomSheetState(BottomSheetValue.Collapsed)
     )
     var requestPermission by rememberSaveable { mutableStateOf(false) }
+    var showImageAdapter by rememberSaveable { mutableStateOf(true) }
+    var cameraName by rememberSaveable { mutableStateOf("") }
 
     val cameraLauncher =
-        rememberLauncherForActivityResult(ActivityResultContracts.TakePicturePreview()) {
-            viewModel.obtainEvent(AddEditScreenEvent.AddBitmap(it))
+        rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult())
+        { result ->
+            loger(result)
+            if (result.resultCode == Activity.RESULT_OK) {
+                scope.launch {
+                    viewModel.obtainEvent(AddEditScreenEvent.AddBitmap(getImageWithName(cameraName)))
+                }
+            }
         }
 
     val galleryLauncher =
-        rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) { activityResult ->
-            if (activityResult.resultCode == Activity.RESULT_OK) {
-                val imageUri = activityResult.data?.data
+        rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == Activity.RESULT_OK) {
+                val imageUri = result.data?.data
                 scope.launch(Dispatchers.IO) {
                     try {
                         val stream = imageUri?.let { context.contentResolver.openInputStream(it) }
@@ -69,27 +74,28 @@ fun AddEditScreen(
         }
     BottomSheet(bottomSheetScaffoldState, answer = { choiceDialog ->
         when (choiceDialog) {
-            is ChoiceDialog.Camera -> cameraLauncher.launch()
+            is ChoiceDialog.Camera -> {
+                val (intent, fileName) = getCameraCaptureWithNameIntent()
+                cameraName = fileName
+                cameraLauncher.launch(intent)
+            }
             is ChoiceDialog.Gallery -> galleryLauncher.launch(getGalleryCaptureIntent())
             is ChoiceDialog.Cancel -> viewModel.obtainEvent(AddEditScreenEvent.CancelDialog)
         }
         scope.launch { bottomSheetScaffoldState.bottomSheetState.collapse() }
     }) {
-        if (screenState.showSlider){
-            Slider(screenState.images){
-                viewModel.obtainEvent(AddEditScreenEvent.ChangeSlider(false))
-            }
+        if (screenState.showSlider) {
+            ImageSlider(
+                images = viewModel.bigImages.value,
+                closeClick = { viewModel.obtainEvent(AddEditScreenEvent.ChangeSlider(false)) },
+                deleteClick = { viewModel.obtainEvent(AddEditScreenEvent.DeleteImage(it)) }
+            )
         }
         Scaffold(scaffoldState = scaffoldState) {
             if (requestPermission) {
-                LaunchedEffect(key1 = Unit) {
-                    requestPermission = checkPermissionImage(context)
-                }
+                LaunchedEffect(key1 = Unit) { requestPermission = checkPermissionImage(context) }
                 PermissionApp(
-                    permissions = listOf(
-                        Manifest.permission.CAMERA,
-                        Manifest.permission.READ_EXTERNAL_STORAGE
-                    ),
+                    permissions = mediaPermissions,
                     openSettings = { openSettings(context) },
                     closeMessage = { requestPermission = false },
                     content = {
@@ -110,21 +116,24 @@ fun AddEditScreen(
                         modifier = Modifier
                             .fillMaxSize()
                             .background(MaterialTheme.colors.surface)
-
                     ) {
-                        ImageAdapter(images = screenState.images){
-                            viewModel.obtainEvent(AddEditScreenEvent.ChangeSlider(true))
+                        if (showImageAdapter) {
+                            ImageAdapter(images = screenState.images) {
+                                viewModel.obtainEvent(AddEditScreenEvent.ChangeSlider(true))
+                            }
                         }
-                        CurrentDate(date = screenState.date) { requestPermission = true }
+                        CurrentDate(
+                            screenState.images,
+                            date = screenState.date,
+                            addClick = { requestPermission = true }
+                        ) { showImageAdapter = !showImageAdapter }
                         TextFields(titleState, viewModel, contentState)
                     }
                     LaunchedEffect(key1 = Unit) {
                         viewModel.actionFlow.collectLatest {
                             when (it) {
                                 is AddEditScreenAction.ShowSnackBar -> {
-                                    scaffoldState.snackbarHostState.showSnackbar(
-                                        message = it.message
-                                    )
+                                    scaffoldState.snackbarHostState.showSnackbar(message = it.message)
                                 }
                                 is AddEditScreenAction.NavigateUp -> navController.navigateUp()
                             }

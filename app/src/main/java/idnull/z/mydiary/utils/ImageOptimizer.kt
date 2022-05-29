@@ -11,6 +11,7 @@ import androidx.exifinterface.media.ExifInterface
 import java.io.File
 import java.io.FileOutputStream
 import java.io.InputStream
+import java.lang.RuntimeException
 import java.util.*
 import kotlin.math.max
 import kotlin.math.min
@@ -304,7 +305,8 @@ object ImageOptimizer {
     }
 
 
-    fun getResizedBitmap(image: Bitmap): Bitmap {
+    fun getResizedBitmap(image: Bitmap?): Bitmap {
+        if (image == null) throw RuntimeException("image not be null")
         val maxSize = 500
         image.byteCount
         var width = image.width

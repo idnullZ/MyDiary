@@ -1,6 +1,7 @@
 package idnull.z.mydiary.ui.add_edit_screen
 
 
+import android.graphics.Bitmap
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.SavedStateHandle
@@ -18,6 +19,7 @@ import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import java.util.*
 import javax.inject.Inject
@@ -35,6 +37,7 @@ class AddEditViewModel @Inject constructor(
     private val data = Calendar.getInstance().timeInMillis
     private var oldDate = -1L
     private var currentId: Int? = null
+    private var oldPhotos = listOf<InternalStoragePhoto>()
 
     private val _diaryTitle = mutableStateOf(TextFieldState(hint = "Title"))
     val title: State<TextFieldState> = _diaryTitle
@@ -49,6 +52,8 @@ class AddEditViewModel @Inject constructor(
     val actionFlow = _actionFlow.asSharedFlow()
 
     private val internalImages = MutableStateFlow<List<InternalStoragePhoto>>(emptyList())
+    val bigImages get() = internalImages.asStateFlow()
+
 
     init {
         viewModelScope.launch {
@@ -71,9 +76,7 @@ class AddEditViewModel @Inject constructor(
     fun obtainEvent(event: AddEditScreenEvent) {
         when (event) {
             is AddEditScreenEvent.EnteredTitle -> {
-                _diaryTitle.value = title.value.copy(
-                    text = event.value
-                )
+                _diaryTitle.value = title.value.copy(text = event.value)
             }
             is AddEditScreenEvent.ChangeTitleFocus -> {
                 _diaryTitle.value = title.value.copy(
@@ -90,49 +93,61 @@ class AddEditViewModel @Inject constructor(
                     isHintVisible = !event.focusState.isFocused && content.value.text.isBlank()
                 )
             }
-            is AddEditScreenEvent.SaveDiary -> {
-                viewModelScope.launch(errorHandler) {
-                    val images = photoRepository.saveImages(images = screenState.value.images)
-                    val utilsData = convertToData(data = data)
-                    repository.insertDiary(
-                        DiaryUnit(
-                            title = title.value.text,
-                            content = content.value.text,
-                            date = if (currentId == null) data else oldDate,
-                            id = currentId,
-                            dateFromCheck = utilsData,
-                            images = images
-                        )
-                    )
-                    _actionFlow.emit(AddEditScreenAction.NavigateUp)
-                }
-            }
             is AddEditScreenEvent.DeleteDiary -> {
                 viewModelScope.launch(errorHandler) {
                     currentId?.let { repository.deleteDiary(id = it) }
                     _actionFlow.emit(AddEditScreenAction.NavigateUp)
                 }
             }
-            is AddEditScreenEvent.AddBitmap -> {
-                if (event.bitmap == null) {
-                    showSnackBar("Error")
-                    return
-                }
-                val images = internalImages.value.toMutableList()
-                images.add(InternalStoragePhoto(event.bitmap))
-                viewModelScope.launch { internalImages.emit(images) }
-            }
-            is AddEditScreenEvent.CancelDialog -> {
-                showSnackBar("Selection Canceled")
-            }
+            is AddEditScreenEvent.SaveDiary -> saveDiary()
+            is AddEditScreenEvent.AddBitmap -> addImage(event.bitmap)
+            is AddEditScreenEvent.CancelDialog -> showSnackBar("Selection Canceled")
             is AddEditScreenEvent.ChangeSlider -> {
                 _screenState.value = _screenState.value.copy(showSlider = event.isVisible)
             }
+            is AddEditScreenEvent.DeleteImage -> {
+                val tempt = internalImages.value.toMutableList()
+                tempt.remove(event.photo)
+                viewModelScope.launch { internalImages.emit(tempt) }
+            }
 
             is AddEditScreenEvent.Error -> {
-                // TODO:  
+                showSnackBar(null)
             }
         }
+    }
+
+    private fun saveDiary() {
+        viewModelScope.launch(errorHandler) {
+            val result = photoRepository.deleteAllPhoto(oldPhotos)
+            if (result.isSuccess) {
+                val images = photoRepository.saveImages(images = screenState.value.images)
+                val utilsData = convertToData(data = data)
+                repository.insertDiary(
+                    DiaryUnit(
+                        title = title.value.text,
+                        content = content.value.text,
+                        date = if (currentId == null) data else oldDate,
+                        id = currentId,
+                        dateFromCheck = utilsData,
+                        images = images
+                    )
+                )
+                _actionFlow.emit(AddEditScreenAction.NavigateUp)
+            } else {
+                showSnackBar(result.exceptionOrNull().toString())
+            }
+        }
+    }
+
+    private fun addImage(image: Bitmap?) {
+        if (image == null) {
+            showSnackBar("Error")
+            return
+        }
+        val images = internalImages.value.toMutableList()
+        images.add(InternalStoragePhoto(image))
+        viewModelScope.launch { internalImages.emit(images) }
     }
 
     private suspend fun handleState(id: Int) {
@@ -153,19 +168,18 @@ class AddEditViewModel @Inject constructor(
                     text = it.content,
                     isHintVisible = false
                 )
-                internalImages.emit(photoRepository.getAllPhotos(it.images))
+                oldPhotos = photoRepository.getAllPhotos(it.images)
+                internalImages.emit(oldPhotos)
             }
         } else {
             _screenState.value = screenState.value.copy(date = convertDataFullInfo(data))
         }
     }
 
-    private fun showSnackBar(value: String) {
+    private fun showSnackBar(value: String?) {
         viewModelScope.launch {
             _actionFlow.emit(
-                AddEditScreenAction.ShowSnackBar(
-                    message = value
-                )
+                AddEditScreenAction.ShowSnackBar(message = value ?: "Unexpected Error")
             )
         }
     }

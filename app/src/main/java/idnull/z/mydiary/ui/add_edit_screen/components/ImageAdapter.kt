@@ -23,13 +23,15 @@ fun ImageAdapter(images: List<InternalStoragePhoto>, onClick: () -> Unit) {
 
 @Composable
 fun ImageItem(image: InternalStoragePhoto, onClick: () -> Unit) {
-    Image(
-        bitmap = image.bmp.asImageBitmap(),
-        contentDescription = "Image",
+    image.bmp?.let {
+        Image(
+        bitmap = it.asImageBitmap(),
+        contentDescription = null,
         modifier = Modifier
             .size(100.dp)
             .clickable { onClick() }
     )
+    }
 }
 
 
