@@ -1,11 +1,8 @@
 package idnull.z.mydiary.ui.add_edit_screen.components
 
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material.Text
-import androidx.compose.material.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusState
@@ -19,7 +16,7 @@ fun ControlTextField(
     text: String,
     hint: String,
     maxLines: Int = Int.MAX_VALUE,
-    modifier: Modifier = Modifier,
+    modifier: Modifier,
     isHintVisible: Boolean = true,
     onValueChange: (String) -> Unit,
     textStyle: TextStyle = TextStyle(),
@@ -42,13 +39,9 @@ fun ControlTextField(
                 .onFocusChanged {
                     onFocusChange(it)
                 },
-
-
             )
         if (isHintVisible) {
             Text(text = hint, style = textStyle, color = Color(0xFF68838F))
         }
     }
-
-
 }

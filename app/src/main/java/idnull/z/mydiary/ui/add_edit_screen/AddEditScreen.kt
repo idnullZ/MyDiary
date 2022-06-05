@@ -3,21 +3,26 @@ package idnull.z.mydiary.ui.add_edit_screen
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.graphics.BitmapFactory
+import androidx.activity.compose.BackHandler
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.google.accompanist.pager.ExperimentalPagerApi
 import idnull.z.mydiary.ui.add_edit_screen.components.*
+import idnull.z.mydiary.ui.add_edit_screen.components.ShowSmileDialog
 import idnull.z.mydiary.ui.shared_component.PermissionApp
 import idnull.z.mydiary.utils.*
 import kotlinx.coroutines.Dispatchers
@@ -44,6 +49,7 @@ fun AddEditScreen(
     var requestPermission by rememberSaveable { mutableStateOf(false) }
     var showImageAdapter by rememberSaveable { mutableStateOf(true) }
     var cameraName by rememberSaveable { mutableStateOf("") }
+    val isSmilesDialogOpen = remember { mutableStateOf(false) }
 
     val cameraLauncher =
         rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult())
@@ -55,7 +61,6 @@ fun AddEditScreen(
                 }
             }
         }
-
     val galleryLauncher =
         rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == Activity.RESULT_OK) {
@@ -68,7 +73,6 @@ fun AddEditScreen(
                     } catch (error: Exception) {
                         viewModel.obtainEvent(AddEditScreenEvent.Error(error.message))
                     }
-
                 }
             }
         }
@@ -80,20 +84,19 @@ fun AddEditScreen(
                 cameraLauncher.launch(intent)
             }
             is ChoiceDialog.Gallery -> galleryLauncher.launch(getGalleryCaptureIntent())
-            is ChoiceDialog.Cancel -> viewModel.obtainEvent(AddEditScreenEvent.CancelDialog)
+            is ChoiceDialog.Cancel -> Unit
         }
         scope.launch { bottomSheetScaffoldState.bottomSheetState.collapse() }
     }) {
         if (screenState.showSlider) {
             ImageSlider(
                 images = viewModel.bigImages.value,
-                closeClick = { viewModel.obtainEvent(AddEditScreenEvent.ChangeSlider(false)) },
+                closeClick = { viewModel.obtainEvent(AddEditScreenEvent.SliderVisibility(false)) },
                 deleteClick = { viewModel.obtainEvent(AddEditScreenEvent.DeleteImage(it)) }
             )
         }
         Scaffold(scaffoldState = scaffoldState) {
             if (requestPermission) {
-                LaunchedEffect(key1 = Unit) { requestPermission = checkPermissionImage(context) }
                 PermissionApp(
                     permissions = mediaPermissions,
                     openSettings = { openSettings(context) },
@@ -119,16 +122,30 @@ fun AddEditScreen(
                     ) {
                         if (showImageAdapter) {
                             ImageAdapter(images = screenState.images) {
-                                viewModel.obtainEvent(AddEditScreenEvent.ChangeSlider(true))
+                                viewModel.obtainEvent(AddEditScreenEvent.SliderVisibility(true))
                             }
+                            SmileAdapter(
+                                viewModel.screenState.value.smilesSelected,
+                                isSelectedIgnore = true,
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(top = 8.dp, start = 8.dp, end = 8.dp)
+                            )
                         }
                         CurrentDate(
-                            screenState.images,
+                            images = screenState.images,
                             date = screenState.date,
-                            addClick = { requestPermission = true }
-                        ) { showImageAdapter = !showImageAdapter }
+                            showAdapter = showImageAdapter,
+                            addPhotoClick = { requestPermission = true },
+                            addSmilesClick = { isSmilesDialogOpen.value = true },
+                            hideMood = { showImageAdapter = !showImageAdapter },
+                        )
+                        ShowSmileDialog(isSmilesDialogOpen, screenState.smile) {
+                            viewModel.obtainEvent(AddEditScreenEvent.SmileSavaClick(it))
+                        }
                         TextFields(titleState, viewModel, contentState)
                     }
+
                     LaunchedEffect(key1 = Unit) {
                         viewModel.actionFlow.collectLatest {
                             when (it) {
@@ -142,5 +159,9 @@ fun AddEditScreen(
                 }
             }
         }
+    }
+    BackHandler {
+        navController.navigateUp()
+        viewModel.obtainEvent(AddEditScreenEvent.BackPress)
     }
 }

@@ -1,6 +1,7 @@
 package idnull.z.mydiary.ui.add_edit_screen.components
 
 import android.graphics.Bitmap
+import androidx.activity.compose.BackHandler
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.spring
@@ -36,11 +37,9 @@ fun ImageSlider(
     closeClick: () -> Unit,
     deleteClick: (photo: InternalStoragePhoto) -> Unit
 ) {
-
     var isZombie by remember { mutableStateOf(false) }
     var item by remember { mutableStateOf(InternalStoragePhoto()) }
     val scope = rememberCoroutineScope()
-
 
     Column(Modifier.fillMaxSize()) {
         val state = rememberPagerState(pageCount = images.size)
@@ -69,6 +68,7 @@ fun ImageSlider(
             }
         }
     }
+    BackHandler { closeClick() }
 
 }
 
@@ -146,7 +146,6 @@ private fun BoxScope.Indicators(size: Int, index: Int) {
         }
     }
 }
-
 
 @Composable
 private fun Indicator(isSelected: Boolean) {

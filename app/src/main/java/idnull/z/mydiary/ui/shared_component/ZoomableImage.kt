@@ -28,7 +28,7 @@ fun ZoomableImage(image: Bitmap?) {
             .fillMaxSize() // Give the size you want...
             .background(Color.Gray)
             .pointerInput(Unit) {
-                detectTransformGestures { centroid, pan, zoom, rotation ->
+                detectTransformGestures { _, _, zoom, rotation ->
                     scale.value *= zoom
                     rotationState.value += rotation
                 }

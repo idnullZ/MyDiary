@@ -8,18 +8,19 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.sp
 
 @Composable
 fun TextStdNoPad(
-    value: String,
+    text: String,
     modifier: Modifier = Modifier,
     maxLine: Int = 1,
     fontSize: Int = 14,
-    textAlign: TextAlign = TextAlign.Center
+    textAlign: TextAlign = TextAlign.Center,
 ) {
     Text(
-        text = value,
+        text = text,
         color = Color.White,
         fontSize = fontSize.sp,
         maxLines = maxLine,

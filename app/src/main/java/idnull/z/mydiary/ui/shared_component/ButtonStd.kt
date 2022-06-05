@@ -23,6 +23,6 @@ fun ButtonStd(text: String, onClick: () -> Unit) {
         shape = MaterialTheme.shapes.medium,
     )
     {
-        TextStdNoPad(value = text)
+        TextStdNoPad(text = text)
     }
 }

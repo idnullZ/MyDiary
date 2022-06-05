@@ -25,12 +25,12 @@ fun ImageAdapter(images: List<InternalStoragePhoto>, onClick: () -> Unit) {
 fun ImageItem(image: InternalStoragePhoto, onClick: () -> Unit) {
     image.bmp?.let {
         Image(
-        bitmap = it.asImageBitmap(),
-        contentDescription = null,
-        modifier = Modifier
-            .size(100.dp)
-            .clickable { onClick() }
-    )
+            bitmap = it.asImageBitmap(),
+            contentDescription = null,
+            modifier = Modifier
+                .size(90.dp)
+                .clickable { onClick() }
+        )
     }
 }
 

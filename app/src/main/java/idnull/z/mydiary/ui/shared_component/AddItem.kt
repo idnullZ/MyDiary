@@ -7,6 +7,7 @@ import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import idnull.z.mydiary.ui.theme.DarkBar
 import idnull.z.mydiary.utils.BottomBarScreen
@@ -21,7 +22,7 @@ fun RowScope.AddItem(
     BottomNavigationItem(
         modifier = Modifier.background(DarkBar),
         label = {
-            Text(text = screen.title, color = Color.White)
+            Text(text = screen.title, color = Color.White, fontSize = 10.sp)
         },
         icon = {
             Icon(
@@ -35,11 +36,8 @@ fun RowScope.AddItem(
         selectedContentColor = LocalContentColor.current.copy(alpha = ContentAlpha.high),
         onClick = {
             navController.navigate(screen.route) {
-                popUpTo(Screen.DairyListScreen.route) {
-                    inclusive = false
-                }
+                popUpTo(Screen.DairyListScreen.route) { inclusive = false }
             }
-
         }
     )
 }

@@ -6,7 +6,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.ArrowBackIos
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -49,13 +49,13 @@ fun DiaryToolBar(viewModel: DiaryListViewModel) {
                         .size(48.dp)
                 ) {
                     Icon(
-                        imageVector = Icons.Default.ArrowBack, contentDescription = "back",
+                        imageVector = Icons.Default.ArrowBackIos,
+                        contentDescription = "back",
                         modifier = Modifier
-                            .size(36.dp)
+                            .size(30.dp).padding(start = 8.dp)
                             .clickable {
                                 searchBarVisibility = false
                                 viewModel.recoverSearch()
-
                             },
                         tint = MaterialTheme.colors.onBackground
                     )
@@ -78,21 +78,23 @@ fun DiaryToolBar(viewModel: DiaryListViewModel) {
                         fontSize = 20.sp,
                         letterSpacing = 0.5.sp
                     ),
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier.fillMaxWidth().padding(bottom = 8.dp)
                 )
             }
         } else {
-            TopText(text = "My Diary")
+            Column {
+                TopText(text = "My Diary") 
+                Spacer(modifier = Modifier.height(16.dp))
+            }
+          
             Row(
                 horizontalArrangement = Arrangement.End,
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Icon(imageVector = Icons.Default.Search, contentDescription = "search",
                     modifier = Modifier
-                        .clickable {
-                            searchBarVisibility = true
-                        }
-                        .padding(horizontal = 8.dp),
+                        .clickable { searchBarVisibility = true }
+                        .padding(start = 8.dp, end = 8.dp, top = 10.dp),
                     tint = MaterialTheme.colors.onBackground
                 )
             }

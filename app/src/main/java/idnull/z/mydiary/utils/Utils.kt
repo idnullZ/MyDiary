@@ -12,12 +12,15 @@ import android.provider.MediaStore
 import android.provider.Settings
 import android.util.Log
 import androidx.core.content.ContextCompat
+import idnull.z.mydiary.data.InternalStorageRepository.Companion.SEPARATOR
 import idnull.z.mydiary.domain.Diary
 import idnull.z.mydiary.domain.DiaryUnit
+import idnull.z.mydiary.domain.SmileIcons
+import idnull.z.mydiary.ui.add_edit_screen.AddEditUtils
 import java.io.File
-import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.math.sqrt
 
 
 const val MIME_TYPE_IMAGE_ALL = "image/*"
@@ -102,4 +105,33 @@ fun convertDataFullInfo(date: Long) =
 
 fun loger(value: Any = "work") {
     Log.d("TAGMYLOGERTAG", "LOG: $value")
+}
+
+fun changIsSelectSmiles(smiles: List<SmileIcons>, id: String): List<SmileIcons> {
+    val result = smiles.toMutableList()
+    for (i in smiles.indices) {
+        if (smiles[i].id == id) {
+            result[i] = result[i].copy(isSelect = !smiles[i].isSelect)
+        }
+    }
+    return result
+}
+
+fun convertSmilesToString(smiles: List<SmileIcons>): String {
+    val result = mutableListOf<String>()
+    for (i in smiles) {
+        result.add(i.id)
+    }
+    return result.joinToString(SEPARATOR)
+}
+
+fun convertStringToSmiles(string: String): List<SmileIcons> {
+    val smiles = AddEditUtils().smiles.toMutableList()
+    for (i in smiles.indices) {
+        if (string.contains(smiles[i].id)) {
+            smiles[i] = smiles[i].copy(isSelect = true)
+        }
+    }
+
+    return smiles
 }

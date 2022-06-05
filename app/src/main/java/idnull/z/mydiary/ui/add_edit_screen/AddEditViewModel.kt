@@ -8,12 +8,15 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import idnull.z.mydiary.data.DataStoreRepository
 import idnull.z.mydiary.data.DiaryRepository
 import idnull.z.mydiary.data.InternalStorageRepository
 import idnull.z.mydiary.domain.DiaryUnit
 import idnull.z.mydiary.domain.InternalStoragePhoto
 import idnull.z.mydiary.utils.ImageOptimizer.getResizedBitmap
 import idnull.z.mydiary.utils.convertDataFullInfo
+import idnull.z.mydiary.utils.convertSmilesToString
+import idnull.z.mydiary.utils.convertStringToSmiles
 import idnull.z.mydiary.utils.convertToData
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -28,6 +31,7 @@ import javax.inject.Inject
 class AddEditViewModel @Inject constructor(
     private val photoRepository: InternalStorageRepository,
     private val repository: DiaryRepository,
+    private val dataStoreRepository: DataStoreRepository,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
@@ -38,6 +42,7 @@ class AddEditViewModel @Inject constructor(
     private var oldDate = -1L
     private var currentId: Int? = null
     private var oldPhotos = listOf<InternalStoragePhoto>()
+    val utils = AddEditUtils()
 
     private val _diaryTitle = mutableStateOf(TextFieldState(hint = "Title"))
     val title: State<TextFieldState> = _diaryTitle
@@ -53,7 +58,6 @@ class AddEditViewModel @Inject constructor(
 
     private val internalImages = MutableStateFlow<List<InternalStoragePhoto>>(emptyList())
     val bigImages get() = internalImages.asStateFlow()
-
 
     init {
         viewModelScope.launch {
@@ -101,8 +105,7 @@ class AddEditViewModel @Inject constructor(
             }
             is AddEditScreenEvent.SaveDiary -> saveDiary()
             is AddEditScreenEvent.AddBitmap -> addImage(event.bitmap)
-            is AddEditScreenEvent.CancelDialog -> showSnackBar("Selection Canceled")
-            is AddEditScreenEvent.ChangeSlider -> {
+            is AddEditScreenEvent.SliderVisibility -> {
                 _screenState.value = _screenState.value.copy(showSlider = event.isVisible)
             }
             is AddEditScreenEvent.DeleteImage -> {
@@ -110,10 +113,12 @@ class AddEditViewModel @Inject constructor(
                 tempt.remove(event.photo)
                 viewModelScope.launch { internalImages.emit(tempt) }
             }
-
-            is AddEditScreenEvent.Error -> {
-                showSnackBar(null)
+            is AddEditScreenEvent.SmileSavaClick -> {
+                _screenState.value = screenState.value.copy(smile = event.smiles)
             }
+            is AddEditScreenEvent.Error -> showSnackBar(null)
+            is AddEditScreenEvent.BackPress -> if (screenState.value.saveVisibility) saveDiary()
+
         }
     }
 
@@ -121,7 +126,7 @@ class AddEditViewModel @Inject constructor(
         viewModelScope.launch(errorHandler) {
             val result = photoRepository.deleteAllPhoto(oldPhotos)
             if (result.isSuccess) {
-                val images = photoRepository.saveImages(images = screenState.value.images)
+                val images = photoRepository.saveImages(images = internalImages.value)
                 val utilsData = convertToData(data = data)
                 repository.insertDiary(
                     DiaryUnit(
@@ -130,9 +135,11 @@ class AddEditViewModel @Inject constructor(
                         date = if (currentId == null) data else oldDate,
                         id = currentId,
                         dateFromCheck = utilsData,
-                        images = images
+                        images = images,
+                        smiles = convertSmilesToString(screenState.value.smilesSelected)
                     )
                 )
+                currentId?.let { dataStoreRepository.saveDiaryId(it) }
                 _actionFlow.emit(AddEditScreenAction.NavigateUp)
             } else {
                 showSnackBar(result.exceptionOrNull().toString())
@@ -151,6 +158,7 @@ class AddEditViewModel @Inject constructor(
     }
 
     private suspend fun handleState(id: Int) {
+        _screenState.value = screenState.value.copy(smile = utils.smiles)
         if (id != -1) {
             _screenState.value =
                 screenState.value.copy(saveVisibility = true, deleteVisibility = true)
@@ -159,7 +167,6 @@ class AddEditViewModel @Inject constructor(
                 oldDate = it.date
                 _screenState.value =
                     screenState.value.copy(date = convertDataFullInfo(it.date))
-
                 _diaryTitle.value = title.value.copy(
                     text = it.title,
                     isHintVisible = false
@@ -170,6 +177,8 @@ class AddEditViewModel @Inject constructor(
                 )
                 oldPhotos = photoRepository.getAllPhotos(it.images)
                 internalImages.emit(oldPhotos)
+                _screenState.value =
+                    screenState.value.copy(smile = convertStringToSmiles(it.smiles))
             }
         } else {
             _screenState.value = screenState.value.copy(date = convertDataFullInfo(data))
@@ -179,7 +188,9 @@ class AddEditViewModel @Inject constructor(
     private fun showSnackBar(value: String?) {
         viewModelScope.launch {
             _actionFlow.emit(
-                AddEditScreenAction.ShowSnackBar(message = value ?: "Unexpected Error")
+                AddEditScreenAction.ShowSnackBar(
+                    message = value ?: "Unexpected Error"
+                )
             )
         }
     }
