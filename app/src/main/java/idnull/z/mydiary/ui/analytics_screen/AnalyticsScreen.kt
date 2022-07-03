@@ -8,7 +8,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import com.google.accompanist.pager.ExperimentalPagerApi
 import idnull.z.mydiary.ui.shared_component.BottomBar
 import idnull.z.mydiary.ui.shared_component.FabButton
 import idnull.z.mydiary.ui.shared_component.TopBar
@@ -27,7 +26,5 @@ fun AnalyticsScreen(navController: NavController) {
     ) {
         Text(text = "Analytics", fontSize = 25.sp, color = Color.White)
     }
-
-
 }
 

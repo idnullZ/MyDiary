@@ -1,9 +1,7 @@
 package idnull.z.mydiary.ui.main
 
 
-import android.content.Context
 import android.os.Bundle
-import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
@@ -21,12 +19,6 @@ import idnull.z.mydiary.domain.themes.ThemeSetting
 import javax.inject.Inject
 
 
-var urodstvo: Context? = null
-
-fun logerToast(s: String) {
-    Toast.makeText(urodstvo, s, Toast.LENGTH_LONG).show()
-}
-
 @ExperimentalMaterialApi
 @ExperimentalFoundationApi
 @ExperimentalComposeUiApi
@@ -38,10 +30,8 @@ class MainActivity : ComponentActivity() {
     @Inject
     lateinit var themeSetting: ThemeSetting
 
-    @OptIn(ExperimentalAnimationApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        urodstvo = this
         installSplashScreen().apply {
             setKeepVisibleCondition {
                 viewModel.isLoading.value

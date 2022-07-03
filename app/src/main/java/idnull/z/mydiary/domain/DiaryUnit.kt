@@ -13,8 +13,8 @@ data class DiaryUnit(
     val content: String,
     val date: Long,
     val dateFromCheck: String,
-    val images:String,
-    val smiles:String,
+    val images: String,
+    val smiles: String,
 ) {
     fun toDiaryCalendar(diaryUnit: DiaryUnit) = Diary(
         id = diaryUnit.id,

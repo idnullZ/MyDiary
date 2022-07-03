@@ -23,7 +23,8 @@ fun HelloUser() {
         Icon(
             imageVector = Icons.Rounded.AccountCircle,
             contentDescription = "userPhoto",
-            modifier = Modifier.padding(8.dp)
+            modifier = Modifier
+                .padding(8.dp)
                 .size(50.dp)
         )
         TextStd(value = "Hello")

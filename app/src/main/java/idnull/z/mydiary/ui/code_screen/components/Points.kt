@@ -30,7 +30,6 @@ fun Points(viewModel: CodeScreenViewModel) {
                 Point(pointNumber = i, viewModel = viewModel)
             }
         }
-        
         Spacer(modifier = Modifier.height(32.dp))
     }
 }

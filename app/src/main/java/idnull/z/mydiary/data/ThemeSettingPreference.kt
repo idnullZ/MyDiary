@@ -24,7 +24,6 @@ class ThemeSettingPreference @Inject constructor(
 
     override val themeStream: MutableStateFlow<AppTheme> = MutableStateFlow(theme)
 
-
     inner class AppThemePreferenceDelegate(
         private val name: String,
         private val default: AppTheme
@@ -42,7 +41,6 @@ class ThemeSettingPreference @Inject constructor(
                 putInt(name, value.ordinal)
             }
         }
-
     }
 }
 

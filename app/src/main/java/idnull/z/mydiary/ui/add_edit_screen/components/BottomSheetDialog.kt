@@ -24,7 +24,6 @@ fun BottomSheet(
     bottomSheetScaffoldState: BottomSheetScaffoldState,
     answer: (ChoiceDialog) -> Unit,
     content: @Composable () -> Unit
-
 ) {
     BottomSheetScaffold(
         scaffoldState = bottomSheetScaffoldState,

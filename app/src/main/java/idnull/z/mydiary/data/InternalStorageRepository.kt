@@ -11,7 +11,6 @@ import idnull.z.mydiary.utils.removeLast4
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.io.IOException
-import java.lang.RuntimeException
 import java.util.*
 import javax.inject.Inject
 

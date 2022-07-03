@@ -24,9 +24,7 @@ fun Point(pointNumber: Int, viewModel: CodeScreenViewModel) {
                     Color.Red
                 } else {
                     MaterialTheme.colors.onBackground
-
                 }
             )
     )
-
 }

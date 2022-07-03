@@ -22,7 +22,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.google.accompanist.pager.ExperimentalPagerApi
 import idnull.z.mydiary.ui.add_edit_screen.components.*
-import idnull.z.mydiary.ui.add_edit_screen.components.ShowSmileDialog
 import idnull.z.mydiary.ui.shared_component.PermissionApp
 import idnull.z.mydiary.utils.*
 import kotlinx.coroutines.Dispatchers
@@ -54,7 +53,6 @@ fun AddEditScreen(
     val cameraLauncher =
         rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult())
         { result ->
-            loger(result)
             if (result.resultCode == Activity.RESULT_OK) {
                 scope.launch {
                     viewModel.obtainEvent(AddEditScreenEvent.AddBitmap(getImageWithName(cameraName)))
@@ -90,6 +88,7 @@ fun AddEditScreen(
     }) {
         if (screenState.showSlider) {
             ImageSlider(
+                item = screenState.currentPageSlider,
                 images = viewModel.bigImages.value,
                 closeClick = { viewModel.obtainEvent(AddEditScreenEvent.SliderVisibility(false)) },
                 deleteClick = { viewModel.obtainEvent(AddEditScreenEvent.DeleteImage(it)) }
@@ -122,7 +121,9 @@ fun AddEditScreen(
                     ) {
                         if (showImageAdapter) {
                             ImageAdapter(images = screenState.images) {
-                                viewModel.obtainEvent(AddEditScreenEvent.SliderVisibility(true))
+                                viewModel.obtainEvent(
+                                    AddEditScreenEvent.SliderVisibility(true, id = it)
+                                )
                             }
                             SmileAdapter(
                                 viewModel.screenState.value.smilesSelected,

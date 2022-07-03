@@ -13,11 +13,8 @@ import idnull.z.mydiary.data.DiaryRepository
 import idnull.z.mydiary.data.InternalStorageRepository
 import idnull.z.mydiary.domain.DiaryUnit
 import idnull.z.mydiary.domain.InternalStoragePhoto
+import idnull.z.mydiary.utils.*
 import idnull.z.mydiary.utils.ImageOptimizer.getResizedBitmap
-import idnull.z.mydiary.utils.convertDataFullInfo
-import idnull.z.mydiary.utils.convertSmilesToString
-import idnull.z.mydiary.utils.convertStringToSmiles
-import idnull.z.mydiary.utils.convertToData
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -38,7 +35,7 @@ class AddEditViewModel @Inject constructor(
     private val errorHandler = CoroutineExceptionHandler { _, throwable ->
         showSnackBar(throwable.message ?: "Unexpected Error!")
     }
-    private val data = Calendar.getInstance().timeInMillis
+    private var data  = Calendar.getInstance().timeInMillis
     private var oldDate = -1L
     private var currentId: Int? = null
     private var oldPhotos = listOf<InternalStoragePhoto>()
@@ -61,8 +58,8 @@ class AddEditViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            savedStateHandle.get<Int>("id")?.let { id ->
-                handleState(id)
+            savedStateHandle.get<Long>("id")?.let { id ->
+                handleId(id)
             }
         }
         viewModelScope.launch {
@@ -79,9 +76,8 @@ class AddEditViewModel @Inject constructor(
 
     fun obtainEvent(event: AddEditScreenEvent) {
         when (event) {
-            is AddEditScreenEvent.EnteredTitle -> {
+            is AddEditScreenEvent.EnteredTitle ->
                 _diaryTitle.value = title.value.copy(text = event.value)
-            }
             is AddEditScreenEvent.ChangeTitleFocus -> {
                 _diaryTitle.value = title.value.copy(
                     isHintVisible = !event.focusState.isFocused && title.value.text.isBlank()
@@ -105,20 +101,24 @@ class AddEditViewModel @Inject constructor(
             }
             is AddEditScreenEvent.SaveDiary -> saveDiary()
             is AddEditScreenEvent.AddBitmap -> addImage(event.bitmap)
-            is AddEditScreenEvent.SliderVisibility -> {
-                _screenState.value = _screenState.value.copy(showSlider = event.isVisible)
-            }
+            is AddEditScreenEvent.SliderVisibility ->
+                _screenState.value = _screenState.value.copy(
+                    showSlider = event.isVisible,
+                    currentPageSlider = utils.getPositionFromId(
+                        images = screenState.value.images,
+                        id = event.id
+                    )
+                )
+
             is AddEditScreenEvent.DeleteImage -> {
                 val tempt = internalImages.value.toMutableList()
                 tempt.remove(event.photo)
                 viewModelScope.launch { internalImages.emit(tempt) }
             }
-            is AddEditScreenEvent.SmileSavaClick -> {
+            is AddEditScreenEvent.SmileSavaClick ->
                 _screenState.value = screenState.value.copy(smile = event.smiles)
-            }
             is AddEditScreenEvent.Error -> showSnackBar(null)
             is AddEditScreenEvent.BackPress -> if (screenState.value.saveVisibility) saveDiary()
-
         }
     }
 
@@ -192,6 +192,16 @@ class AddEditViewModel @Inject constructor(
                     message = value ?: "Unexpected Error"
                 )
             )
+        }
+    }
+
+    private suspend  fun handleId(id:Long){
+        if (id.toString().length>9){
+            loger("create new $id")
+            data = id
+            handleState(-1)
+        }else{
+            handleState(id.toInt())
         }
     }
 }

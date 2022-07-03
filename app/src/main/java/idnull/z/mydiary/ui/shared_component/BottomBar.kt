@@ -2,10 +2,8 @@ package idnull.z.mydiary.ui.shared_component
 
 import androidx.compose.material.BottomNavigation
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.graphics.Color
 import androidx.navigation.NavController
-import androidx.navigation.compose.currentBackStackEntryAsState
 import idnull.z.mydiary.utils.BottomBarScreen
 
 @Composable

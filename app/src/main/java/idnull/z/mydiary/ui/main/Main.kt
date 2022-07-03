@@ -55,8 +55,8 @@ fun Main(useDarkColors: Boolean, startDestination: String) {
                     route = Screen.AddEditDiaryScreen.route + "?id={id}",
                     arguments = listOf(
                         navArgument(name = "id") {
-                            type = NavType.IntType
-                            defaultValue = -1
+                            type = NavType.LongType
+                            defaultValue = -1L
                         }
                     ),
                     //                            enterTransition = enterAnimatedTransition(Screen.DairyListScreen),

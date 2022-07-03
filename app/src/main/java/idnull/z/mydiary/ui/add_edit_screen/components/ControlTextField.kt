@@ -22,9 +22,7 @@ fun ControlTextField(
     textStyle: TextStyle = TextStyle(),
     singleLine: Boolean = false,
     onFocusChange: (FocusState) -> Unit,
-
-    ) {
-
+) {
     Box(
         modifier = modifier
     ) {
@@ -39,7 +37,7 @@ fun ControlTextField(
                 .onFocusChanged {
                     onFocusChange(it)
                 },
-            )
+        )
         if (isHintVisible) {
             Text(text = hint, style = textStyle, color = Color(0xFF68838F))
         }

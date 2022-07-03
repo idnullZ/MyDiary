@@ -33,21 +33,22 @@ import kotlinx.coroutines.launch
 @ExperimentalPagerApi
 @Composable
 fun ImageSlider(
+    item:Int,
     images: List<InternalStoragePhoto>,
     closeClick: () -> Unit,
     deleteClick: (photo: InternalStoragePhoto) -> Unit
 ) {
     var isZombie by remember { mutableStateOf(false) }
-    var item by remember { mutableStateOf(InternalStoragePhoto()) }
     val scope = rememberCoroutineScope()
+    var index by remember { mutableStateOf(0) }
 
     Column(Modifier.fillMaxSize()) {
-        val state = rememberPagerState(pageCount = images.size)
+        val state = rememberPagerState(pageCount = images.size , initialPage = item )
 
         TopSection(
             images = images,
             closeClick = closeClick,
-            deleteClick = { deleteClick(item) },
+            deleteClick = { deleteClick(images[index]) },
             zoomClick = { isZombie = !isZombie }
         )
 
@@ -57,7 +58,7 @@ fun ImageSlider(
                 .fillMaxSize()
                 .weight(0.8f)
         ) {
-            item = images[it]
+            index = state.currentPage
             Item(images[it].bmp, isZombie)
         }
 
@@ -168,7 +169,7 @@ private fun Indicator(isSelected: Boolean) {
 @Composable
 private fun Item(
     item: Bitmap?,
-    isZoomable: Boolean
+    isZoomable: Boolean,
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,

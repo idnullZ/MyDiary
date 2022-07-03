@@ -1,6 +1,7 @@
 package idnull.z.mydiary.ui.add_edit_screen
 
 import idnull.z.mydiary.R
+import idnull.z.mydiary.domain.InternalStoragePhoto
 import idnull.z.mydiary.domain.SmileIcons
 
 class AddEditUtils {
@@ -20,4 +21,13 @@ class AddEditUtils {
         SmileIcons(R.drawable.laughing12, "laughing"),
         SmileIcons(R.drawable.ghost13, "ghost"),
     )
+
+    fun getPositionFromId(id: String?, images: List<InternalStoragePhoto>): Int {
+        for (i in images.indices) {
+            if (images[i].name == id) {
+                return i
+            }
+        }
+        return 0
+    }
 }

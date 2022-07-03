@@ -1,6 +1,7 @@
 package idnull.z.mydiary.utils
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -82,9 +83,8 @@ fun openSettings(context: Context) {
 }
 
 
-fun String.removeLast4(): String {
-    return this.substring(0, this.length - 4)
-}
+fun String.removeLast4() = this.substring(0, this.length - 4)
+
 
 fun toDiary(diaryUnit: DiaryUnit) = Diary(
     id = diaryUnit.id,
@@ -93,6 +93,15 @@ fun toDiary(diaryUnit: DiaryUnit) = Diary(
     date = convertData(diaryUnit.date),
     utilsDate = diaryUnit.dateFromCheck
 )
+
+
+
+@SuppressLint("SimpleDateFormat")
+fun dataToLong(data: String): Long {
+    val f = SimpleDateFormat("yyyy.MM.dd")
+    val d: Date = f.parse(data) as Date
+    return d.time
+}
 
 fun convertData(date: Long) =
     SimpleDateFormat("E,dd MMM yyyy", Locale.getDefault()).format(date).toString()
@@ -104,7 +113,7 @@ fun convertDataFullInfo(date: Long) =
     SimpleDateFormat("E,MMMd h:mm a", Locale.getDefault()).format(date).toString()
 
 fun loger(value: Any = "work") {
-    Log.d("TAGMYLOGERTAG", "LOG: $value")
+    Log.d("TAGMySuperTAG", "LOG: $value")
 }
 
 fun changIsSelectSmiles(smiles: List<SmileIcons>, id: String): List<SmileIcons> {

@@ -2,14 +2,11 @@ package idnull.z.mydiary.ui.settings_screen.components
 
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.Canvas
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.DarkMode
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -24,7 +21,6 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
-
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -35,7 +31,7 @@ fun SettingsSwitch(
     imageVector: ImageVector,
     text: String,
     switchValue: Boolean,
-    onClickSwitch: (emit:Boolean) -> Unit
+    onClickSwitch: (emit: Boolean) -> Unit
 ) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
@@ -82,7 +78,7 @@ fun Switch(
     uncheckedTrackColor: Color = Color(0xFFe0e0e0),
     thumbColor: Color = Color.White,
     gapBetweenThumbAndTrackEdge: Dp = 1.dp,
-    onTap: (emit:Boolean) -> Unit
+    onTap: (emit: Boolean) -> Unit
 ) {
     val switchON = remember {
         mutableStateOf(switch)

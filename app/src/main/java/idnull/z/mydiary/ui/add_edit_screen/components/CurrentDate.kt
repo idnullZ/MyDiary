@@ -27,7 +27,6 @@ fun CurrentDate(
     addSmilesClick: () -> Unit,
     hideMood: () -> Unit,
 ) {
-
     Column(modifier = Modifier.fillMaxWidth()) {
         Row(
             verticalAlignment = Alignment.CenterVertically,

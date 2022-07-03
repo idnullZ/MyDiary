@@ -11,10 +11,10 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun Divorce() {
-
-
-    Spacer(modifier = Modifier
-        .fillMaxWidth()
-        .background(Color.White)
-        .height(0.5.dp))
+    Spacer(
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(Color.White)
+            .height(0.5.dp)
+    )
 }

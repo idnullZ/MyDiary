@@ -13,10 +13,8 @@ import idnull.z.mydiary.domain.Diary
 import idnull.z.mydiary.domain.use_case.GetListDiaryUseCase
 import idnull.z.mydiary.ui.add_edit_screen.TextFieldState
 import idnull.z.mydiary.utils.convertData
-import idnull.z.mydiary.utils.loger
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.FlowPreview
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -57,13 +55,11 @@ class DiaryListViewModel @Inject constructor(
     private fun savaInitialData(data: List<Diary>) {
 
         viewModelScope.launch {
-            if (data.isEmpty()){
+            if (data.isEmpty()) {
                 repository.saveDiaryId(-1)
                 return@launch
             }
             val curData = convertData(calendar.timeInMillis)
-            loger(curData)
-            loger(data.first().date)
             if (data.first().date == curData) {
                 data.first().id?.let { repository.saveDiaryId(it) }
             } else {

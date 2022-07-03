@@ -27,7 +27,6 @@ fun ToolBar(
     viewModel: AddEditViewModel,
     saveVisibility: Boolean = false,
     deleteVisibility: Boolean = false
-
 ) {
     Row(
         verticalAlignment = Alignment.CenterVertically,

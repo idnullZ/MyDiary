@@ -28,8 +28,9 @@ fun ItemNumber(number: String, onClick: (number: String) -> Unit) {
                     onClick(number)
                 }
             }
-            .padding(start = 16.dp, end = 16.dp, top = 12
-                .dp, bottom = 24.dp)
+            .padding(
+                start = 16.dp, end = 16.dp, top = 12.dp, bottom = 24.dp
+            )
     )
     {
         Text(

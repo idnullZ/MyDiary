@@ -22,5 +22,4 @@ interface DiaryDao {
 
     @Query("DELETE FROM dairy_table WHERE id = :id")
     suspend fun deleteDiary(id: Int)
-
 }

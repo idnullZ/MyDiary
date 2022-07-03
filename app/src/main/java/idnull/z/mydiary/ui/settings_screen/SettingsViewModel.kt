@@ -35,7 +35,7 @@ class SettingsViewModel @Inject constructor(private val themeSetting: ThemeSetti
     }
 
 
-   private fun initDarkMode() {
+    private fun initDarkMode() {
         val useDarkMode = when (theme.value) {
             AppTheme.MODE_DAY -> false
             AppTheme.MODE_NIGHT -> true

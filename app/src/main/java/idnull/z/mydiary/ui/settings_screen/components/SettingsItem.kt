@@ -10,17 +10,15 @@ import androidx.compose.material.icons.filled.NavigateNext
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
-
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import idnull.z.mydiary.ui.theme.RoyalBlue
 
 @Composable
-fun SettingsItem(imageVector: ImageVector, text: String, onClick :()->Unit = {}) {
+fun SettingsItem(imageVector: ImageVector, text: String, onClick: () -> Unit = {}) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween,
@@ -55,6 +53,4 @@ fun SettingsItem(imageVector: ImageVector, text: String, onClick :()->Unit = {})
                 .padding(end = 25.dp)
         )
     }
-
-
 }

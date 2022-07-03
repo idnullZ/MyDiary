@@ -7,10 +7,8 @@ import androidx.compose.material.Scaffold
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.*
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import idnull.z.mydiary.domain.themes.AppTheme
 import idnull.z.mydiary.ui.settings_screen.components.Divorce
 import idnull.z.mydiary.ui.settings_screen.components.SettingsItem
 import idnull.z.mydiary.ui.settings_screen.components.SettingsSwitch
@@ -18,7 +16,6 @@ import idnull.z.mydiary.ui.settings_screen.components.TextItem
 import idnull.z.mydiary.ui.shared_component.BottomBar
 import idnull.z.mydiary.ui.shared_component.FabButton
 import idnull.z.mydiary.ui.shared_component.TopText
-import kotlinx.coroutines.flow.collectLatest
 
 
 @Composable

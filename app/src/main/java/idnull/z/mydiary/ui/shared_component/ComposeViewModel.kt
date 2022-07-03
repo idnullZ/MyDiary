@@ -16,7 +16,7 @@ class ComposeViewModel @Inject constructor(
     fun navigateToAddEditScreen(navController: NavController) {
         viewModelScope.launch {
             val todayDiaryId = repository.readDiaryId()
-            navController.navigate(Screen.AddEditDiaryScreen.route + "?id=${todayDiaryId}")
+            navController.navigate(Screen.AddEditDiaryScreen.route + "?id=${todayDiaryId.toLong()}")
         }
     }
 }

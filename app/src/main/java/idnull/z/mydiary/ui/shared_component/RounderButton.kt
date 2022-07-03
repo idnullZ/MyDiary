@@ -31,10 +31,7 @@ fun OutlineRounderButton(
         )
     ) {
         Text(text = text, color = Color.White)
-      
     }
-
-
 }
 
 
@@ -51,9 +48,7 @@ fun RounderButton(
         elevation = ButtonDefaults.elevation(0.dp, 0.dp),
         contentPadding = PaddingValues(20.dp, 12.dp),
 
-    ) {
+        ) {
         Text(text = text, color = Color.White)
     }
-
-
 }

@@ -30,7 +30,6 @@ import idnull.z.mydiary.ui.shared_component.RounderButton
 import idnull.z.mydiary.ui.shared_component.TextStd
 import idnull.z.mydiary.ui.theme.DarkBar
 import idnull.z.mydiary.utils.changIsSelectSmiles
-import idnull.z.mydiary.utils.loger
 import kotlinx.coroutines.launch
 
 

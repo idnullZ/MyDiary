@@ -13,23 +13,21 @@ import androidx.compose.ui.unit.dp
 import idnull.z.mydiary.domain.InternalStoragePhoto
 
 @Composable
-fun ImageAdapter(images: List<InternalStoragePhoto>, onClick: () -> Unit) {
+fun ImageAdapter(images: List<InternalStoragePhoto>, onClick: (id: String) -> Unit) {
     LazyRow(modifier = Modifier.fillMaxWidth()) {
-        items(images) {
-            ImageItem(image = it, onClick)
-        }
+        items(images) { ImageItem(image = it, onClick) }
     }
 }
 
 @Composable
-fun ImageItem(image: InternalStoragePhoto, onClick: () -> Unit) {
+fun ImageItem(image: InternalStoragePhoto, onClick: (id: String) -> Unit) {
     image.bmp?.let {
         Image(
             bitmap = it.asImageBitmap(),
             contentDescription = null,
             modifier = Modifier
                 .size(90.dp)
-                .clickable { onClick() }
+                .clickable { onClick(image.name) }
         )
     }
 }

@@ -12,7 +12,8 @@ sealed class AddEditScreenEvent {
     data class ChangeContentFocus(val focusState: FocusState) : AddEditScreenEvent()
     data class AddBitmap(val bitmap: Bitmap?) : AddEditScreenEvent()
     data class Error(val value: String?) : AddEditScreenEvent()
-    data class SliderVisibility(val isVisible: Boolean) : AddEditScreenEvent()
+    data class SliderVisibility(val isVisible: Boolean, val id: String? = null) : AddEditScreenEvent()
+
     data class DeleteImage(val photo: InternalStoragePhoto) : AddEditScreenEvent()
     data class SmileSavaClick(val smiles: List<SmileIcons>) : AddEditScreenEvent()
 
